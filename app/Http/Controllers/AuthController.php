@@ -65,7 +65,11 @@ class AuthController extends Controller
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            return response()->json(['status' => __($status)]);
+            return response()->json(['message' => __($status)]);
+        } else if ($status === Password::RESET_THROTTLED) {
+            abort(429, __($status), [
+                'Retry-After' => now()->addMinutes(1)->toRfc7231String(),
+            ]);
         }
         throw ValidationException::withMessages(['email' => __($status)]);
     }
