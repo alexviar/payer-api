@@ -112,4 +112,22 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |----------------------------------------------------------------------
+    | Super Admin Configuration
+    |----------------------------------------------------------------------
+    |
+    | Here you may define the configuration for the super administrator user.
+    | This user is typically created during the application setup and
+    | has full access to all parts of the system.
+    |
+    | Make sure to set the name, email, and password to your desired values
+    | and store them in your .env file for security purposes.
+    |
+    */
+    'super_admin' => [
+        'name' => env('SUPER_ADMIN_NAME', 'Super Admin'),
+        'email' => env('SUPER_ADMIN_EMAIL', 'admin@example.com'),
+        'password' => env('SUPER_ADMIN_PASSWORD', 'password'),
+    ],
 ];
