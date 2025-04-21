@@ -38,6 +38,11 @@ class Inspection extends Model
 
     #region Relations
 
+    public function groupLeader(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function plant(): BelongsTo
     {
         return $this->belongsTo(Plant::class);
