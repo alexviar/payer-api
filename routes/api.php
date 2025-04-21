@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CustomAttributeController;
 use App\Http\Controllers\PlantController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +33,12 @@ Route::controller(ClientController::class)->prefix('clients')->group(function ()
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::put('/{client}', 'update')->middleware('auth:sanctum');
     Route::delete('/{client}', 'destroy')->middleware('auth:sanctum');
+});
+
+Route::controller(CustomAttributeController::class)->prefix('custom-attributes')->group(function () {
+    Route::get('/', 'index')->middleware('auth:sanctum');
+    Route::get('/{customAttribute}', 'show')->middleware('auth:sanctum');
+    Route::post('/', 'store')->middleware('auth:sanctum');
+    Route::put('/{customAttribute}', 'update')->middleware('auth:sanctum');
+    Route::delete('/{customAttribute}', 'destroy')->middleware('auth:sanctum');
 });
