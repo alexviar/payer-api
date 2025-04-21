@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Inspection;
 use App\Models\Plant;
 use App\Models\Product;
 use App\Models\SalesAgent;
@@ -25,7 +26,13 @@ class InspectionFactory extends Factory
             'description' => $this->faker->sentence(),
             'start_date' => $this->faker->optional()->dateTimeBetween('-2 years', 'now')?->format('Y-m-d'),
             'complete_date' => $this->faker->optional()->dateTimeBetween('-2 years', 'now')?->format('Y-m-d'),
-            'status' => $this->faker->numberBetween(0, 3),
+            'status' => $this->faker->randomElement([
+                Inspection::PENDING_STATUS,
+                Inspection::ACTIVE_STATUS,
+                Inspection::ON_HOLD_STATUS,
+                Inspection::UNDER_REVIEW_STATUS,
+                Inspection::COMPLETED_STATUS,
+            ]),
             'plant_id' => Plant::factory(),
             'product_id' => Product::factory(),
             'group_leader_id' => User::factory()->groupLeader()
