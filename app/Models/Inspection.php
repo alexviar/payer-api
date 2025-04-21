@@ -19,5 +19,19 @@ class Inspection extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function defects(): BelongsToMany
+    {
+        return $this->belongsToMany(Defect::class, 'inspection_defects')
+            // ->withPivot('quantity')
+            ->withTimestamps();
+    }
+
+    public function reworks(): BelongsToMany
+    {
+        return $this->belongsToMany(Rework::class, 'inspection_reworks')
+            // ->withPivot('quantity')
+            ->withTimestamps();
+    }
+
     #endregion
 }
