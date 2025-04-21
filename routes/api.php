@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomAttributeController;
 use App\Http\Controllers\DefectController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReworkController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,4 +60,12 @@ Route::controller(DefectController::class)->prefix('defects')->group(function ()
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::put('/{defect}', 'update')->middleware('auth:sanctum');
     Route::delete('/{defect}', 'destroy')->middleware('auth:sanctum');
+});
+
+Route::controller(ReworkController::class)->prefix('reworks')->group(function () {
+    Route::get('/', 'index')->middleware('auth:sanctum');
+    Route::get('/{rework}', 'show')->middleware('auth:sanctum');
+    Route::post('/', 'store')->middleware('auth:sanctum');
+    Route::put('/{rework}', 'update')->middleware('auth:sanctum');
+    Route::delete('/{rework}', 'destroy')->middleware('auth:sanctum');
 });
