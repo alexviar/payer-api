@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +24,17 @@ class Inspection extends Model
         'group_leader_id',
         'sales_agent_id',
     ];
+
+    #region Attributes
+
+    public function client(): Attribute
+    {
+        return Attribute::get(
+            get: fn() => $this->product->client,
+        );
+    }
+
+    #endregion
 
     #region Relations
 
