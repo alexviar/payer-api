@@ -17,7 +17,8 @@ class DefectInstanceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'tag' => $this->faker->unique()->bothify('DEF-####'),
+            'defect_id' => \App\Models\Defect::factory(),
         ];
     }
 }

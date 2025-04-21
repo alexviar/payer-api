@@ -17,7 +17,8 @@ class DefectFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->word() . ' Defect',
+            'description' => $this->faker->optional()->sentence(),
         ];
     }
 }

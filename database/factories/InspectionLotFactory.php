@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Inspection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,13 @@ class InspectionLotFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'qn' => $this->faker->bothify('QN-####'),
+            'pn' => $this->faker->bothify('PN-####'),
+            'inspect_date' => $this->faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d'),
+            'total_units' => $this->faker->numberBetween(100, 1000),
+            'total_rejects' => $this->faker->numberBetween(0, 50),
+            'total_reworks' => $this->faker->numberBetween(0, 30),
+            'inspection_id' => Inspection::factory(),
         ];
     }
 }

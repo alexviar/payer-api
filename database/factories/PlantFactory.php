@@ -17,7 +17,8 @@ class PlantFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->company() . ' Plant',
+            'address' => $this->faker->address(),
         ];
     }
 }

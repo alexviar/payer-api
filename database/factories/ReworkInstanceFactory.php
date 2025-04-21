@@ -17,7 +17,8 @@ class ReworkInstanceFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'tag' => $this->faker->unique()->bothify('REW-####'),
+            // rework_id e inspection_lot_id se asignan en el seeder para mantener la relación
         ];
     }
 }

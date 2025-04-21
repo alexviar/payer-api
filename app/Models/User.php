@@ -15,6 +15,8 @@ class User extends Authenticatable
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     const SUPERADMIN_ROLE = 1;
+    const ADMIN_ROLE = 2;
+    const GROUP_LEADER_ROLE = 3;
 
     /**
      * The attributes that are mass assignable.

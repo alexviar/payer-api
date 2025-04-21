@@ -17,7 +17,8 @@ class ReworkFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->word() . ' Rework',
+            'description' => $this->faker->optional()->sentence(),
         ];
     }
 }
