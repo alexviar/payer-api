@@ -14,6 +14,11 @@ class Product extends Model
 
     #region Relations
 
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
+    }
+
     public function attributes(): BelongsToMany
     {
         return $this->belongsToMany(CustomAttribute::class, 'product_attributes')
