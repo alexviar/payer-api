@@ -38,6 +38,11 @@ class Inspection extends Model
 
     #region Relations
 
+    public function plant(): BelongsTo
+    {
+        return $this->belongsTo(Plant::class);
+    }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
