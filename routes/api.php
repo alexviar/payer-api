@@ -11,6 +11,7 @@ use App\Http\Controllers\PlantController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReworkController;
 use App\Http\Controllers\SalesAgentController;
+use App\Http\Controllers\ReworkInstanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +103,14 @@ Route::controller(InspectionController::class)->prefix('inspections')->group(fun
             Route::post('/', 'store')->middleware('auth:sanctum');
             Route::put('/{defect}', 'update')->middleware('auth:sanctum');
             Route::delete('/{defect}', 'destroy')->middleware('auth:sanctum');
+        });
+
+        Route::controller(ReworkInstanceController::class)->prefix('{inspectionLot}/reworks')->group(function () {
+            Route::get('/', 'index')->middleware('auth:sanctum');
+            Route::get('/{rework}', 'show')->middleware('auth:sanctum');
+            Route::post('/', 'store')->middleware('auth:sanctum');
+            Route::put('/{rework}', 'update')->middleware('auth:sanctum');
+            Route::delete('/{rework}', 'destroy')->middleware('auth:sanctum');
         });
     });
 });
