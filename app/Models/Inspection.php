@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use COM;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,12 @@ class Inspection extends Model
 {
     /** @use HasFactory<\Database\Factories\InspectionFactory> */
     use HasFactory;
+
+    const PENDING_STATUS = 1;
+    const ACTIVE_STATUS = 2;
+    const ON_HOLD_STATUS = 3;
+    const UNDER_REVIEW_STATUS = 4;
+    const COMPLETED_STATUS = 5;
 
     protected $fillable = [
         'submit_date',
