@@ -13,4 +13,9 @@ class InspectionController extends Controller
 
         return $query->paginate($request->input('page_size'));
     }
+
+    public function show(Inspection $inspection)
+    {
+        return $inspection;
+    }
 }
