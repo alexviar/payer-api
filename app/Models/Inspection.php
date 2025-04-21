@@ -53,6 +53,11 @@ class Inspection extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function salesAgents(): BelongsToMany
+    {
+        return $this->belongsToMany(SalesAgent::class);
+    }
+
     public function defects(): BelongsToMany
     {
         return $this->belongsToMany(Defect::class, 'inspection_defects')
