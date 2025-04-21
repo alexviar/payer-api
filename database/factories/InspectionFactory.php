@@ -28,8 +28,7 @@ class InspectionFactory extends Factory
             'status' => $this->faker->numberBetween(0, 3),
             'plant_id' => Plant::factory(),
             'product_id' => Product::factory(),
-            'group_leader_id' => User::factory()->groupLeader(),
-            'sales_agent_id' => SalesAgent::factory()
+            'group_leader_id' => User::factory()->groupLeader()
         ];
     }
 }
