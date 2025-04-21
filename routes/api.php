@@ -7,6 +7,7 @@ use App\Http\Controllers\DefectController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReworkController;
+use App\Http\Controllers\SalesAgentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -68,4 +69,12 @@ Route::controller(ReworkController::class)->prefix('reworks')->group(function ()
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::put('/{rework}', 'update')->middleware('auth:sanctum');
     Route::delete('/{rework}', 'destroy')->middleware('auth:sanctum');
+});
+
+Route::controller(SalesAgentController::class)->prefix('sales-agents')->group(function () {
+    Route::get('/', 'index')->middleware('auth:sanctum');
+    Route::get('/{salesAgent}', 'show')->middleware('auth:sanctum');
+    Route::post('/', 'store')->middleware('auth:sanctum');
+    Route::put('/{salesAgent}', 'update')->middleware('auth:sanctum');
+    Route::delete('/{salesAgent}', 'destroy')->middleware('auth:sanctum');
 });
