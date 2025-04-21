@@ -46,4 +46,13 @@ class Inspection extends Model
     }
 
     #endregion
+
+    public function casts(): array
+    {
+        return [
+            'submit_date' => 'date',
+            'start_date' => 'date',
+            'complete_date' => 'date',
+        ];
+    }
 }
