@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CustomAttributeController;
 use App\Http\Controllers\DefectController;
+use App\Http\Controllers\DefectInstanceController;
 use App\Http\Controllers\InspectionController;
 use App\Http\Controllers\InspectionLotController;
 use App\Http\Controllers\PlantController;
@@ -94,5 +95,13 @@ Route::controller(InspectionController::class)->prefix('inspections')->group(fun
         Route::post('/', 'store')->middleware('auth:sanctum');
         Route::put('/{inspectionLot}', 'update')->middleware('auth:sanctum');
         Route::delete('/{inspectionLot}', 'destroy')->middleware('auth:sanctum');
+
+        Route::controller(DefectInstanceController::class)->prefix('{inspectionLot}/defects')->group(function () {
+            Route::get('/', 'index')->middleware('auth:sanctum');
+            Route::get('/{defect}', 'show')->middleware('auth:sanctum');
+            Route::post('/', 'store')->middleware('auth:sanctum');
+            Route::put('/{defect}', 'update')->middleware('auth:sanctum');
+            Route::delete('/{defect}', 'destroy')->middleware('auth:sanctum');
+        });
     });
 });
