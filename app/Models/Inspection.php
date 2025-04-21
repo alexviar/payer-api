@@ -12,6 +12,18 @@ class Inspection extends Model
     /** @use HasFactory<\Database\Factories\InspectionFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'submit_date',
+        'description',
+        'start_date',
+        'complete_date',
+        'status',
+        'plant_id',
+        'product_id',
+        'group_leader_id',
+        'sales_agent_id',
+    ];
+
     #region Relations
 
     public function product(): BelongsTo
