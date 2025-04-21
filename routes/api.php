@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CustomAttributeController;
 use App\Http\Controllers\DefectController;
+use App\Http\Controllers\InspectionController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReworkController;
@@ -77,4 +78,12 @@ Route::controller(SalesAgentController::class)->prefix('sales-agents')->group(fu
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::put('/{salesAgent}', 'update')->middleware('auth:sanctum');
     Route::delete('/{salesAgent}', 'destroy')->middleware('auth:sanctum');
+});
+
+Route::controller(InspectionController::class)->prefix('inspections')->group(function () {
+    Route::get('/', 'index')->middleware('auth:sanctum');
+    Route::get('/{inspection}', 'show')->middleware('auth:sanctum');
+    Route::post('/', 'store')->middleware('auth:sanctum');
+    Route::put('/{inspection}', 'update')->middleware('auth:sanctum');
+    Route::delete('/{inspection}', 'destroy')->middleware('auth:sanctum');
 });
