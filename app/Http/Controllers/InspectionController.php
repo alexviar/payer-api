@@ -27,4 +27,20 @@ class InspectionController extends Controller
     {
         return $inspection;
     }
+
+    public function store(Request $request)
+    {
+        $payload = $request->all();
+        $inspection = DB::transaction(function () use ($payload) {
+
+            /** @var Inspection $inspection */
+            $inspection = Inspection::create(Arr::except($payload, ['sales_agent_ids', 'defect_ids', 'rework_ids']));
+            $inspection->salesAgents()->sync($payload['sales_agent_ids']);
+            $inspection->defects()->sync($payload['defect_ids']);
+            $inspection->reworks()->sync($payload['rework_ids']);
+        });
+
+
+        return response()->json($inspection, 201);
+    }
 }
