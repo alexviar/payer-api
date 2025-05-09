@@ -12,6 +12,17 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'manufacturer',
+        'client_id',
+    ];
+
     #region Relations
 
     public function client(): BelongsTo
