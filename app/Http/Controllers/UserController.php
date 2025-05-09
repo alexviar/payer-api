@@ -16,6 +16,12 @@ class UserController extends Controller
         /** @var Builder $query */
         $query = User::query();
 
+        if ($request->has('filter.role')) {
+            $query->where('role', $request->input('filter.role'));
+        }
+
+        $query->latest('id');
+
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
