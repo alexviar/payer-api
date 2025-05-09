@@ -16,4 +16,9 @@ class ReworkController extends Controller
 
         return $result;
     }
+
+    public function store(Request $request)
+    {
+        return Rework::create($request->all());
+    }
 }
