@@ -9,4 +9,8 @@ class Defect extends Model
 {
     /** @use HasFactory<\Database\Factories\DefectFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name'
+    ];
 }

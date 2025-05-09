@@ -68,8 +68,7 @@ class DatabaseSeeder extends Seeder
                 \App\Models\Inspection::factory(rand(4, 6))->create([
                     'plant_id' => $plant->id,
                     'product_id' => $plantProducts->random()->id,
-                    'group_leader_id' => $groupLeaders->random()->id,
-                    'sales_agent_id' => $salesAgents->random()->id,
+                    'group_leader_id' => $groupLeaders->random()->id
                 ])
             );
         }
@@ -77,6 +76,10 @@ class DatabaseSeeder extends Seeder
         // Lotes de inspección (3-5 por inspección)
         $lots = collect();
         foreach ($inspections as $inspection) {
+
+            $inspection->salesAgents()->attach(
+                $salesAgents->random(rand(0, 3))->pluck('id')->toArray()
+            );
 
             $inspection->defects()->attach(
                 $defects->random(rand(1, 3))->pluck('id')->toArray()

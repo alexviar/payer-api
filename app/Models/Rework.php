@@ -9,4 +9,8 @@ class Rework extends Model
 {
     /** @use HasFactory<\Database\Factories\ReworkFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name'
+    ];
 }

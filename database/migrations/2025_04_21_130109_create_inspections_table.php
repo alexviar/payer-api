@@ -22,14 +22,22 @@ return new class extends Migration
             $table->id();
             $table->date('submit_date');
             $table->string('description');
+            $table->integer('inventory')->unsigned();
             $table->date('start_date')->nullable();
             $table->date('complete_date')->nullable();
             $table->tinyInteger('status');
             $table->foreignIdFor(Plant::class)->constrained();
             $table->foreignIdFor(Product::class)->constrained();
             $table->foreignIdFor(User::class, 'group_leader_id')->constrained();
-            $table->foreignIdFor(SalesAgent::class)->constrained();
             $table->datetimes();
+        });
+
+        Schema::create('inspection_sales_agent', function (Blueprint $table) {
+            $table->foreignIdFor(Inspection::class)->constrained();
+            $table->foreignIdFor(SalesAgent::class)->constrained();
+            $table->timestamps();
+
+            $table->primary(['inspection_id', 'sales_agent_id']);
         });
 
         Schema::create('inspection_defects', function (Blueprint $table) {
