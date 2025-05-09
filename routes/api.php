@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReworkController;
 use App\Http\Controllers\SalesAgentController;
 use App\Http\Controllers\ReworkInstanceController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,14 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('change-password', 'changePassword')->middleware('auth:sanctum');
     Route::post('reset-password', 'resetPassword')->name('password.reset');
     Route::post('forgot-password', 'forgotPassword');
+});
+
+Route::controller(UserController::class)->prefix('users')->group(function () {
+    Route::get('/', 'index')->middleware('auth:sanctum');
+    Route::get('/{user}', 'show')->middleware('auth:sanctum');
+    Route::post('/', 'store')->middleware('auth:sanctum');
+    Route::put('/{user}', 'update')->middleware('auth:sanctum');
+    Route::delete('/{user}', 'destroy')->middleware('auth:sanctum');
 });
 
 Route::controller(PlantController::class)->prefix('plants')->group(function () {
