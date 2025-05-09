@@ -27,4 +27,10 @@ class ClientController extends Controller
 
         return $result;
     }
+
+    public function store(Request $request)
+    {
+        $client = Client::create($request->all());
+        return $client;
+    }
 }
