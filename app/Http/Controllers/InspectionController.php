@@ -16,6 +16,8 @@ class InspectionController extends Controller
 
         $query->with(['plant', 'product.client', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
 
+        $query->latest('id');
+
         /** @var LengthAwarePaginator $result */
         $result = $query->paginate($request->input('page_size'));
         $result->getCollection()->each(fn($inspection) => $inspection->append('client'));
