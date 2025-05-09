@@ -22,6 +22,7 @@ return new class extends Migration
             $table->id();
             $table->date('submit_date');
             $table->string('description');
+            $table->integer('inventory')->unsigned();
             $table->date('start_date')->nullable();
             $table->date('complete_date')->nullable();
             $table->tinyInteger('status');

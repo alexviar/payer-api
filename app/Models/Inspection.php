@@ -23,6 +23,7 @@ class Inspection extends Model
     protected $fillable = [
         'submit_date',
         'description',
+        'inventory',
         'start_date',
         'complete_date',
         'status',
