@@ -16,4 +16,9 @@ class DefectController extends Controller
 
         return $result;
     }
+
+    public function store(Request $request)
+    {
+        return Defect::create($request->all());
+    }
 }
