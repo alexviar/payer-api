@@ -13,6 +13,10 @@ class ProductController extends Controller
         if ($request->has('search')) {
             $query->where('name', 'like', "%$request->search%");
         }
+
+        if ($request->has('filter.client_id')) {
+            $query->where('client_id', $request->input('filter.client_id'));
+        }
     }
 
     public function index(Request $request)
