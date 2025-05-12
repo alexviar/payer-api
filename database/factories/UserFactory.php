@@ -49,9 +49,32 @@ class UserFactory extends Factory
         ]);
     }
 
+    /**
+     * Indicate that the user is a superadmin.
+     */
+    public function superadmin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::SUPERADMIN_ROLE,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ADMIN_ROLE,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a group leader.
+     */
     public function groupLeader(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'role' => User::GROUP_LEADER_ROLE,
         ]);
     }
