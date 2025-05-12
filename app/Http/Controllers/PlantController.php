@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Plant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PlantController extends Controller
 {
