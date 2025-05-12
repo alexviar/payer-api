@@ -3,7 +3,7 @@
 use App\Models\SalesAgent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use function Pest\Laravel\putJson;
+use function Pest\Laravel\patchJson;
 use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);
@@ -12,7 +12,7 @@ describe('Sales Agent Update', function () {
     it('denies access to unauthenticated users', function () {
         $agent = SalesAgent::factory()->create();
 
-        putJson("/api/sales-agents/{$agent->id}", [])
+        patchJson("/api/sales-agents/{$agent->id}", [])
             ->assertStatus(401);
     });
 
@@ -21,7 +21,7 @@ describe('Sales Agent Update', function () {
         $agent = SalesAgent::factory()->create();
 
         actingAs($user)
-            ->putJson("/api/sales-agents/{$agent->id}", [])
+            ->patchJson("/api/sales-agents/{$agent->id}", [])
             ->assertStatus(403);
     });
 
@@ -29,7 +29,7 @@ describe('Sales Agent Update', function () {
         $user = User::factory()->admin()->create();
         actingAs($user);
 
-        putJson('/api/sales-agents/9999', [
+        patchJson('/api/sales-agents/9999', [
             'name' => 'Updated Name',
             'email' => 'updated@example.com',
             'phone' => '9876543210'
@@ -40,7 +40,7 @@ describe('Sales Agent Update', function () {
         $user = User::factory()->admin()->create();
         $agent = SalesAgent::factory()->create();
         actingAs($user)
-            ->putJson("/api/sales-agents/{$agent->id}", [])
+            ->patchJson("/api/sales-agents/{$agent->id}", [])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['name', 'email', 'phone']);
     });
@@ -50,9 +50,9 @@ describe('Sales Agent Update', function () {
         $agent = SalesAgent::factory()->create();
         $this->actingAs($user);
 
-        putJson("/api/sales-agents/{$agent->id}", [
-            'name' => 'Updated Name',
+        patchJson("/api/sales-agents/{$agent->id}", [
             'email' => 'invalid-email',
+            'name' => 'Updated Name',
             'phone' => '9876543210'
         ])
             ->assertStatus(422)
@@ -66,7 +66,7 @@ describe('Sales Agent Update', function () {
         $this->actingAs($user);
 
         // Intentar actualizar el email del agente 1 al email del agente 2
-        putJson("/api/sales-agents/{$agent1->id}", [
+        patchJson("/api/sales-agents/{$agent1->id}", [
             'name' => 'Updated Name',
             'email' => 'agent2@example.com',
             'phone' => '9876543210'
@@ -81,7 +81,7 @@ describe('Sales Agent Update', function () {
         $this->actingAs($user);
 
         // Actualizar solo el nombre, manteniendo el mismo email
-        putJson("/api/sales-agents/{$agent->id}", [
+        patchJson("/api/sales-agents/{$agent->id}", [
             'name' => 'Updated Name',
             'email' => 'agent@example.com',
             'phone' => '9876543210'
@@ -100,7 +100,7 @@ describe('Sales Agent Update', function () {
             'phone' => '9876543210'
         ];
 
-        $response = putJson("/api/sales-agents/{$agent->id}", $updateData)
+        $response = patchJson("/api/sales-agents/{$agent->id}", $updateData)
             ->assertStatus(200)
             ->assertJsonStructure([
                 'id',

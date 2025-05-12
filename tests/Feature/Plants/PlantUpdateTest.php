@@ -4,13 +4,13 @@ use App\Models\Plant;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 
-use function Pest\Laravel\putJson;
+use function Pest\Laravel\patchJson;
 
 describe('Plant Update', function () {
     it('denies access to unauthenticated users', function () {
         $plant = Plant::factory()->create();
         
-        putJson("/api/plants/{$plant->id}", [])
+        patchJson("/api/plants/{$plant->id}", [])
             ->assertStatus(401);
     });
 
@@ -20,7 +20,7 @@ describe('Plant Update', function () {
         
         Sanctum::actingAs($user);
         
-        putJson("/api/plants/{$plant->id}", [
+        patchJson("/api/plants/{$plant->id}", [
             'name' => 'Updated Name'
         ])->assertStatus(403);
     });
@@ -31,7 +31,7 @@ describe('Plant Update', function () {
         
         Sanctum::actingAs($user);
         
-        putJson("/api/plants/{$plant->id}", [])
+        patchJson("/api/plants/{$plant->id}", [])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['name', 'address', 'status']);
     });
@@ -48,7 +48,7 @@ describe('Plant Update', function () {
             'status' => Plant::TEMPORARILY_UNAVAILABLE
         ];
         
-        putJson("/api/plants/{$plant->id}", $updateData)
+        patchJson("/api/plants/{$plant->id}", $updateData)
             ->assertStatus(200)
             ->assertJsonFragment([
                 'name' => 'Updated Plant Name',
@@ -64,7 +64,7 @@ describe('Plant Update', function () {
         
         Sanctum::actingAs($user);
         
-        putJson("/api/plants/9999", [
+        patchJson("/api/plants/9999", [
             'name' => 'Non-existent',
             'address' => 'Nowhere',
             'status' => Plant::ACTIVE_STATUS
