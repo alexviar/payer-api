@@ -21,7 +21,7 @@ class PlantPolicy
      */
     public function view(User $user, Plant $plant): bool
     {
-        return false;
+        return true;
     }
 
     /**

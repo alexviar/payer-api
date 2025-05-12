@@ -35,15 +35,19 @@ class PlantController extends Controller
         return Plant::create($payload);
     }
 
-    protected function preparePayload(Request $request)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Request $request, Plant $plant)
     {
-        $payload = $request->validate([
-            'name' => ['required', 'string'],
-            'address' => ['required', 'string'],
-            'status' => ['required', 'in:' . implode(',', [Plant::ACTIVE_STATUS, Plant::TEMPORARILY_UNAVAILABLE, Plant::CLOSED_STATUS])],
-        ]);
+        $this->authorize('view', $plant);
 
-        return $payload;
+        if ($request->has('with')) {
+            $relations = explode(',', $request->input('with'));
+            $plant->loadMissing($relations);
+        }
+
+        return $plant;
     }
 
     /**
@@ -76,5 +80,16 @@ class PlantController extends Controller
         $plant->delete();
 
         return response()->noContent();
+    }
+
+    protected function preparePayload(Request $request)
+    {
+        $payload = $request->validate([
+            'name' => ['required', 'string'],
+            'address' => ['required', 'string'],
+            'status' => ['required', 'in:' . implode(',', [Plant::ACTIVE_STATUS, Plant::TEMPORARILY_UNAVAILABLE, Plant::CLOSED_STATUS])],
+        ]);
+
+        return $payload;
     }
 }
