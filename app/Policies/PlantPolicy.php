@@ -39,9 +39,13 @@ class PlantPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Plant $plant): bool
+    public function update(User $user, Plant $plant): Response|bool
     {
-        return false;
+        if (!in_array($user->role, [User::SUPERADMIN_ROLE, User::ADMIN_ROLE])) {
+            return Response::deny('No tienes permiso para actualizar plantas de inspección.');
+        }
+
+        return Response::allow();
     }
 
     /**

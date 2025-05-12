@@ -45,4 +45,18 @@ class PlantController extends Controller
 
         return $payload;
     }
+
+    /**
+     * Update the specified plant in storage.
+     */
+    public function update(Request $request, Plant $plant)
+    {
+        $this->authorize('update', $plant);
+
+        $payload = $this->preparePayload($request);
+
+        $plant->update($payload);
+
+        return $plant;
+    }
 }
