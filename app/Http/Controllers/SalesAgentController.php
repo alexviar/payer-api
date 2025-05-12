@@ -39,6 +39,17 @@ class SalesAgentController extends Controller
         return response()->json($salesAgent, 201);
     }
 
+    public function update(Request $request, SalesAgent $salesAgent)
+    {
+        $this->authorize('update', $salesAgent);
+        
+        $validated = $this->preparePayload($request, $salesAgent);
+        
+        $salesAgent->update($validated);
+        
+        return response()->json($salesAgent);
+    }
+
     protected function preparePayload(Request $request, ?SalesAgent $salesAgent = null)
     {
         return $request->validate([

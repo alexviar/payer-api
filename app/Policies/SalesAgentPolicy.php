@@ -37,7 +37,8 @@ class SalesAgentPolicy
      */
     public function update(User $user, SalesAgent $salesAgent): bool
     {
-        return false;
+        // Solo administradores y superadministradores pueden actualizar agentes
+        return in_array($user->role, [User::ADMIN_ROLE, User::SUPERADMIN_ROLE]);
     }
 
     /**
