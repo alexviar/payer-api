@@ -23,6 +23,7 @@ class InspectionFactory extends Factory
     {
         return [
             'submit_date' => $this->faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d'),
+            'inventory' => $this->faker->numberBetween(1, 100),
             'description' => $this->faker->sentence(),
             'start_date' => $this->faker->optional()->dateTimeBetween('-2 years', 'now')?->format('Y-m-d'),
             'complete_date' => $this->faker->optional()->dateTimeBetween('-2 years', 'now')?->format('Y-m-d'),

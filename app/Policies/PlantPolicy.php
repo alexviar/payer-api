@@ -21,31 +21,43 @@ class PlantPolicy
      */
     public function view(User $user, Plant $plant): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, array $payload): Response|bool
     {
-        return false;
+        if (!in_array($user->role, [User::SUPERADMIN_ROLE, User::ADMIN_ROLE])) {
+            return Response::deny('No tienes permiso para registrar plantas de inspección.');
+        }
+
+        return Response::allow();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Plant $plant): bool
+    public function update(User $user, Plant $plant): Response|bool
     {
-        return false;
+        if (!in_array($user->role, [User::SUPERADMIN_ROLE, User::ADMIN_ROLE])) {
+            return Response::deny('No tienes permiso para actualizar plantas de inspección.');
+        }
+
+        return Response::allow();
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Plant $plant): bool
+    public function delete(User $user, Plant $plant): Response|bool
     {
-        return false;
+        if (!in_array($user->role, [User::SUPERADMIN_ROLE, User::ADMIN_ROLE])) {
+            return Response::deny('No tienes permiso para eliminar plantas de inspección.');
+        }
+
+        return Response::allow();
     }
 
     /**
