@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Inspection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,4 +20,12 @@ class Plant extends Model
         'address',
         'status'
     ];
+
+    /**
+     * Get all inspections for the plant.
+     */
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class);
+    }
 }

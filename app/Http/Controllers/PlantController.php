@@ -67,6 +67,12 @@ class PlantController extends Controller
     {
         $this->authorize('delete', $plant);
 
+        abort_if(
+            $plant->inspections()->exists(),
+            409,
+            'No se puede eliminar la planta porque tiene inspecciones relacionadas.'
+        );
+
         $plant->delete();
 
         return response()->noContent();
