@@ -13,7 +13,7 @@ class SalesAgentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true; // Cualquier usuario autenticado puede ver la lista
     }
 
     /**
@@ -21,7 +21,7 @@ class SalesAgentPolicy
      */
     public function view(User $user, SalesAgent $salesAgent): bool
     {
-        return false;
+        return true; // Cualquier usuario autenticado puede ver un agente
     }
 
     /**
@@ -29,7 +29,7 @@ class SalesAgentPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return in_array($user->role, [User::ADMIN_ROLE, User::SUPERADMIN_ROLE]);
     }
 
     /**
