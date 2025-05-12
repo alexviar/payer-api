@@ -42,12 +42,26 @@ class SalesAgentController extends Controller
     public function update(Request $request, SalesAgent $salesAgent)
     {
         $this->authorize('update', $salesAgent);
-        
+
         $validated = $this->preparePayload($request, $salesAgent);
-        
+
         $salesAgent->update($validated);
-        
+
         return response()->json($salesAgent);
+    }
+
+    public function destroy(SalesAgent $salesAgent)
+    {
+        $this->authorize('delete', $salesAgent);
+
+        // Verificar si el agente tiene inspecciones relacionadas
+        if ($salesAgent->inspections()->exists()) {
+            abort(409, 'No se puede eliminar el agente porque tiene inspecciones relacionadas.');
+        }
+
+        $salesAgent->delete();
+
+        return response()->noContent();
     }
 
     protected function preparePayload(Request $request, ?SalesAgent $salesAgent = null)

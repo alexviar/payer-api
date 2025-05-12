@@ -46,7 +46,8 @@ class SalesAgentPolicy
      */
     public function delete(User $user, SalesAgent $salesAgent): bool
     {
-        return false;
+        // Solo administradores y superadministradores pueden eliminar agentes
+        return in_array($user->role, [User::ADMIN_ROLE, User::SUPERADMIN_ROLE]);
     }
 
     /**
