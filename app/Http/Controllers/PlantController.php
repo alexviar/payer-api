@@ -59,4 +59,16 @@ class PlantController extends Controller
 
         return $plant;
     }
+
+    /**
+     * Remove the specified plant from storage.
+     */
+    public function destroy(Plant $plant)
+    {
+        $this->authorize('delete', $plant);
+
+        $plant->delete();
+
+        return response()->noContent();
+    }
 }
