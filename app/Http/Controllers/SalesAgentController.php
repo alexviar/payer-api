@@ -28,6 +28,12 @@ class SalesAgentController extends Controller
         return $result;
     }
 
+    public function show(SalesAgent $salesAgent)
+    {
+        $this->authorize('view', $salesAgent);
+        return $salesAgent;
+    }
+
     public function store(Request $request)
     {
         $this->authorize('create', SalesAgent::class);
