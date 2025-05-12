@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Plant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,7 @@ class PlantFactory extends Factory
         return [
             'name' => $this->faker->company() . ' Plant',
             'address' => $this->faker->address(),
+            'status' => Plant::ACTIVE_STATUS
         ];
     }
 }

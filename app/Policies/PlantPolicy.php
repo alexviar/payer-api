@@ -27,9 +27,13 @@ class PlantPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, array $payload): Response|bool
     {
-        return false;
+        if (!in_array($user->role, [User::SUPERADMIN_ROLE, User::ADMIN_ROLE])) {
+            return Response::deny('No tienes permiso para registrar plantas de inspección.');
+        }
+
+        return Response::allow();
     }
 
     /**

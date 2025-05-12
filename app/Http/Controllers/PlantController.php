@@ -27,4 +27,22 @@ class PlantController extends Controller
 
         return $result;
     }
+
+    public function store(Request $request)
+    {
+        $this->authorize('create', [Plant::class, $request->all()]);
+        $payload = $this->preparePayload($request);
+        return Plant::create($payload);
+    }
+
+    protected function preparePayload(Request $request)
+    {
+        $payload = $request->validate([
+            'name' => ['required', 'string'],
+            'address' => ['required', 'string'],
+            'status' => ['required', 'in:' . implode(',', [Plant::ACTIVE_STATUS, Plant::TEMPORARILY_UNAVAILABLE, Plant::CLOSED_STATUS])],
+        ]);
+
+        return $payload;
+    }
 }
