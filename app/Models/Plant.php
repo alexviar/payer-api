@@ -11,4 +11,10 @@ class Plant extends Model
     use HasFactory;
 
     const ACTIVE_STATUS = 1;
+
+    protected $fillable = [
+        'name',
+        'address',
+        'status'
+    ];
 }
