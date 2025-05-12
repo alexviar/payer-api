@@ -9,4 +9,6 @@ class Plant extends Model
 {
     /** @use HasFactory<\Database\Factories\PlantFactory> */
     use HasFactory;
+
+    const ACTIVE_STATUS = 1;
 }
