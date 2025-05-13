@@ -26,8 +26,7 @@ describe('Plant Show', function () {
 
         $plant = Plant::factory()->create([
             'name' => 'Planta de Prueba',
-            'address' => 'Calle Falsa 123',
-            'status' => Plant::ACTIVE_STATUS
+            'address' => 'Calle Falsa 123'
         ]);
 
         getJson("/api/plants/{$plant->id}")
@@ -35,8 +34,7 @@ describe('Plant Show', function () {
             ->assertJson([
                 'id' => $plant->id,
                 'name' => 'Planta de Prueba',
-                'address' => 'Calle Falsa 123',
-                'status' => Plant::ACTIVE_STATUS
+                'address' => 'Calle Falsa 123'
             ]);
     });
 
@@ -53,7 +51,6 @@ describe('Plant Show', function () {
                 'id',
                 'name',
                 'address',
-                'status',
                 'inspections' => [
                     '*' => [
                         'id',

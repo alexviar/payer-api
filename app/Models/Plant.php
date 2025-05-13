@@ -11,14 +11,9 @@ class Plant extends Model
     /** @use HasFactory<\Database\Factories\PlantFactory> */
     use HasFactory;
 
-    const ACTIVE_STATUS = 1;
-    const TEMPORARILY_UNAVAILABLE = 2;
-    const CLOSED_STATUS = 3;
-
     protected $fillable = [
         'name',
         'address',
-        'status'
     ];
 
     /**

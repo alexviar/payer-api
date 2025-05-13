@@ -36,7 +36,7 @@ describe('Plant Index', function () {
             ->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'name', 'address', 'status', 'created_at', 'updated_at']
+                    '*' => ['id', 'name', 'address', 'created_at', 'updated_at']
                 ],
                 'current_page',
                 'first_page_url',
@@ -53,7 +53,7 @@ describe('Plant Index', function () {
                 'to',
                 'total'
             ]);
-            
+
         $response->assertJsonCount(3, 'data');
     });
 
