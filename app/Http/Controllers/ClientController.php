@@ -43,14 +43,22 @@ class ClientController extends Controller
         return response()->json($client, 201);
     }
 
+    public function show(Client $client)
+    {
+        $this->authorize('view', $client);
+        $client->loadCount('products');
+        $client->load('lastInspection');
+        return $client;
+    }
+
     protected function preparePayload(Request $request, ?Client $client = null)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'representative' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255|unique:clients,email',
+            'name' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'representative' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'email' => ['required', 'email', 'max:255'],
         ]);
 
         return $validated;
