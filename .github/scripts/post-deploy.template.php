@@ -1,4 +1,7 @@
 <?php
+set_time_limit(300);
+ignore_user_abort(true);
+
 $expectedToken = '{{TOKEN}}';
 
 // ==================== SEGURIDAD ====================
@@ -16,6 +19,21 @@ $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 if (strpos($userAgent, 'GitHub Actions') === false) {
     http_response_code(403);
     die('Invalid request source');
+}
+
+// ==================== DESCOMPRIMIR VENDOR ====================
+if (file_exists(__DIR__ . '/../vendor.zip')) {
+    $zip = new ZipArchive;
+    if ($zip->open(__DIR__ . '/../vendor.zip') === TRUE) {
+        $zip->extractTo(__DIR__ . '/../vendor');
+        $zip->close();
+        unlink(__DIR__ . '/../vendor.zip');
+        echo "Vendor descomprimido exitosamente.\n";
+    } else {
+        echo "Fallo al descomprimir vendor.\n";
+    }
+} else {
+    echo "No se encontró el archivo vendor.zip.\n";
 }
 
 // ==================== INICIALIZAR LARAVEL ====================

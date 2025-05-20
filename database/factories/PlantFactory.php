@@ -19,8 +19,7 @@ class PlantFactory extends Factory
     {
         return [
             'name' => $this->faker->company() . ' Plant',
-            'address' => $this->faker->address(),
-            'status' => Plant::ACTIVE_STATUS
+            'address' => $this->faker->address()
         ];
     }
 }

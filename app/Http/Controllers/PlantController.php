@@ -86,8 +86,7 @@ class PlantController extends Controller
     {
         $payload = $request->validate([
             'name' => ['required', 'string'],
-            'address' => ['required', 'string'],
-            'status' => ['required', 'in:' . implode(',', [Plant::ACTIVE_STATUS, Plant::TEMPORARILY_UNAVAILABLE, Plant::CLOSED_STATUS])],
+            'address' => ['required', 'string']
         ]);
 
         return $payload;

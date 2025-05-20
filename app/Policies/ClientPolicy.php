@@ -21,7 +21,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class ClientPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -45,7 +45,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        return false;
+        return $user->isAdmin() || $user->isSuperAdmin();
     }
 
     /**
