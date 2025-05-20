@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
+    use AuthorizesRequests;
 
     public function applyFilters(Request $request, Builder $query)
     {
@@ -30,7 +32,24 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
-        $client = Client::create($request->all());
-        return $client;
+        $this->authorize('create', Client::class);
+
+        $validated = $this->preparePayload($request);
+        $client = Client::create($validated);
+
+        return response()->json($client, 201);
+    }
+
+    protected function preparePayload(Request $request, ?Client $client = null)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'representative' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'required|email|max:255|unique:clients,email',
+        ]);
+
+        return $validated;
     }
 }
