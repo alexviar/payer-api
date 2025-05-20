@@ -43,9 +43,12 @@ class ClientPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Client $client): bool
+    public function delete(User $user, Client $client): Response
     {
-        return $user->isAdmin() || $user->isSuperAdmin();
+        if (!($user->isAdmin() || $user->isSuperAdmin())) {
+            return Response::deny('Solo administradores pueden eliminar clientes.');
+        }
+        return Response::allow();
     }
 
     /**
