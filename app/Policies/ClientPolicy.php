@@ -45,7 +45,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client): bool
     {
-        return false;
+        return $user->isAdmin() || $user->isSuperAdmin();
     }
 
     /**

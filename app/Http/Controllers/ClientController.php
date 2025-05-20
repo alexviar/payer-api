@@ -6,10 +6,10 @@ use App\Models\Client;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
-    use AuthorizesRequests;
 
     public function applyFilters(Request $request, Builder $query)
     {
@@ -59,6 +59,23 @@ class ClientController extends Controller
         $client->update($validated);
 
         return response()->json($client);
+    }
+
+    public function destroy(Client $client)
+    {
+        $this->authorize('delete', $client);
+
+        abort_if(
+            $client->products()->whereHas('inspections')->exists(),
+            409,
+            'No se puede eliminar el cliente porque tiene inspecciones registradas.'
+        );
+        DB::transaction(function () use ($client) {
+            $client->products()->delete();
+            $client->delete();
+        });
+
+        return response()->noContent();
     }
 
     protected function preparePayload(Request $request, ?Client $client = null)

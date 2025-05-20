@@ -31,6 +31,21 @@ class User extends Authenticatable
         'role'
     ];
 
+    public function isSuperadmin(): bool
+    {
+        return $this->role === self::SUPERADMIN_ROLE;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ADMIN_ROLE;
+    }
+
+    public function isGroupLeader(): bool
+    {
+        return $this->role === self::GROUP_LEADER_ROLE;
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
