@@ -22,4 +22,17 @@ class Client extends Model
         'phone',
         'email',
     ];
+
+    #region Relations
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function lastInspection()
+    {
+        return $this->hasOneThrough(Inspection::class, Product::class)->ofMany();
+    }
+    #endregion
 }

@@ -22,6 +22,9 @@ class ClientController extends Controller
     {
         $query = Client::query();
 
+        $query->with(['lastInspection'])
+            ->withCount(['products']);
+
         $this->applyFilters($request, $query);
 
         /** @var LengthAwarePaginator $result */
