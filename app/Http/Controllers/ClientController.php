@@ -51,6 +51,16 @@ class ClientController extends Controller
         return $client;
     }
 
+    public function update(Request $request, Client $client)
+    {
+        $this->authorize('update', $client);
+
+        $validated = $this->preparePayload($request, $client);
+        $client->update($validated);
+
+        return response()->json($client);
+    }
+
     protected function preparePayload(Request $request, ?Client $client = null)
     {
         $validated = $request->validate([
