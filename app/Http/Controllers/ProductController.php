@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductController extends Controller
 {
@@ -22,6 +23,9 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::query();
+
+        $query->with(['client', 'lastInspection', 'attributes']);
+        $query->withCount('inspections');
 
         $this->applyFilters($request, $query);
 
