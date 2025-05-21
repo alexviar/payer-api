@@ -38,9 +38,12 @@ class ProductPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Product $product): bool
+    public function update(User $user, Product $product): Response
     {
-        return false;
+        if ($user->role == User::GROUP_LEADER_ROLE) {
+            return Response::deny('No tienes permiso para actualizar productos.');
+        }
+        return Response::allow();
     }
 
     /**

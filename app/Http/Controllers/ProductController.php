@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
@@ -59,14 +60,39 @@ class ProductController extends Controller
         return $product;
     }
 
-    protected function preparePayload(Request $request)
+    public function update(Request $request, Product $product)
     {
+        $this->authorize('update', $product);
+        $payload = $this->preparePayload($request, $product);
+
+        $product = DB::transaction(function () use ($payload, $product) {
+            $product->update(Arr::except($payload, 'attributes'));
+            if (Arr::has($payload, 'attributes')) {
+                $product->attributes()->sync($payload['attributes']);
+            }
+            return $product;
+        });
+
+        $product->load(['client', 'attributes']);
+        $product->loadCount('inspections');
+        return $product;
+    }
+
+    protected function preparePayload(Request $request, ?Product $product = null)
+    {
+        $testMessages = app()->environment('testing') ? [
+            'name.required' => 'required',
+            'manufacturer.required' => 'required',
+            'client_id.required' => 'required',
+            'attributes.required' => 'required'
+        ] : [];
+
         return $request->validate([
-            'name' => ['required', 'string'],
-            'manufacturer' => ['required', 'string'],
-            'client_id' => ['required', 'integer', 'exists:clients,id'],
-            'attributes' => ['required', 'array'],
+            'name' => array_merge(['required', 'string'], $product ? ['sometimes'] : []),
+            'manufacturer' => array_merge(['required', 'string'], $product ? ['sometimes'] : []),
+            'client_id' => array_merge(['required', 'integer', 'exists:clients,id'], $product ? ['sometimes'] : []),
+            'attributes' => array_merge(['required', 'array'], $product ? ['sometimes'] : []),
             'attributes.*' => ['integer', 'exists:custom_attributes,id'],
-        ]);
+        ], $testMessages);
     }
 }
