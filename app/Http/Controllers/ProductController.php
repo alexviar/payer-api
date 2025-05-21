@@ -52,6 +52,13 @@ class ProductController extends Controller
         return $product;
     }
 
+    public function show(Product $product)
+    {
+        $product->load(['client', 'attributes', 'lastInspection']);
+        $product->loadCount('inspections');
+        return $product;
+    }
+
     protected function preparePayload(Request $request)
     {
         return $request->validate([
