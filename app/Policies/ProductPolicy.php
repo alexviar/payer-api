@@ -27,25 +27,34 @@ class ProductPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user): Response
     {
-        return false;
+        if ($user->role == User::GROUP_LEADER_ROLE) {
+            return Response::deny('No tienes permiso para crear productos.');
+        }
+        return Response::allow();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Product $product): bool
+    public function update(User $user, Product $product): Response
     {
-        return false;
+        if ($user->role == User::GROUP_LEADER_ROLE) {
+            return Response::deny('No tienes permiso para actualizar productos.');
+        }
+        return Response::allow();
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Product $product): bool
+    public function delete(User $user, Product $product): Response
     {
-        return false;
+        if ($user->role == User::GROUP_LEADER_ROLE) {
+            return Response::deny('No tienes permiso para eliminar productos.');
+        }
+        return Response::allow();
     }
 
     /**
