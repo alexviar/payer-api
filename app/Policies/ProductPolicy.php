@@ -27,9 +27,12 @@ class ProductPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user): Response
     {
-        return false;
+        if ($user->role == User::GROUP_LEADER_ROLE) {
+            return Response::deny('No tienes permiso para crear productos.');
+        }
+        return Response::allow();
     }
 
     /**

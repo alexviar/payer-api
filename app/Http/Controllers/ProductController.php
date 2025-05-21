@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -37,7 +38,28 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $product = Product::create($request->all());
+        $this->authorize('create', Product::class);
+        $payload = $this->preparePayload($request);
+
+        $product = DB::transaction(function () use ($payload) {
+            $product = Product::create($payload);
+            $product->attributes()->sync($payload['attributes']);
+            return $product;
+        });
+
+        $product->load(['client', 'attributes']);
+        $product->loadCount('inspections');
         return $product;
+    }
+
+    protected function preparePayload(Request $request)
+    {
+        return $request->validate([
+            'name' => ['required', 'string'],
+            'manufacturer' => ['required', 'string'],
+            'client_id' => ['required', 'integer', 'exists:clients,id'],
+            'attributes' => ['required', 'array'],
+            'attributes.*' => ['integer', 'exists:custom_attributes,id'],
+        ]);
     }
 }
