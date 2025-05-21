@@ -78,6 +78,18 @@ class ProductController extends Controller
         return $product;
     }
 
+    public function destroy(Product $product)
+    {
+        $this->authorize('delete', $product);
+        abort_if(
+            $product->inspections()->exists(),
+            409,
+            'No se puede eliminar el producto porque tiene inspecciones registradas.'
+        );
+        $product->delete();
+        return response()->noContent();
+    }
+
     protected function preparePayload(Request $request, ?Product $product = null)
     {
         $testMessages = app()->environment('testing') ? [
