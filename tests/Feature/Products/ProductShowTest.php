@@ -50,7 +50,9 @@ describe('Product Show', function () {
                 'inspections_count',
                 'last_inspection' => [
                     'submit_date',
-                    'complete_date'
+                    'complete_date',
+                    'total_approved',
+                    'total_rejected'
                 ],
                 'attributes' => [
                     '*' => [

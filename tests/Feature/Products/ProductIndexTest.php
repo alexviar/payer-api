@@ -61,7 +61,8 @@ describe('Product Listing', function () {
                         'last_inspection' => [
                             'id',
                             'complete_date',
-                            'total_approved'
+                            'total_approved',
+                            'total_rejected'
                         ],
                         'inspections_count',
                         'attributes' => [

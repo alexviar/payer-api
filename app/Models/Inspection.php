@@ -34,15 +34,21 @@ class Inspection extends Model
         'sales_agent_id',
     ];
 
-    protected $appends = ['total_approved'];
+    protected $appends = ['total_approved', 'total_rejected'];
 
     #region Attributes
 
+    public function totalRejected(): Attribute
+    {
+        return Attribute::get(
+            get: fn() => $this->lots()->sum('total_rejects'),
+        );
+    }
+
     public function totalApproved(): Attribute
     {
-        $totalInspectedUnits = $this->lots()->sum('total_units');
         return Attribute::get(
-            get: fn() => $totalInspectedUnits > 0 ? $totalInspectedUnits - $this->lots()->sum('total_rejects') : null,
+            get: fn() => $this->lots()->sum('total_units') - $this->lots()->sum('total_rejects'),
         );
     }
 
