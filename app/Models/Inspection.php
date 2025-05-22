@@ -40,8 +40,9 @@ class Inspection extends Model
 
     public function totalApproved(): Attribute
     {
+        $totalInspectedUnits = $this->lots()->sum('total_units');
         return Attribute::get(
-            get: fn() => $this->inventory - $this->lots()->sum('total_rejects'),
+            get: fn() => $totalInspectedUnits > 0 ? $totalInspectedUnits - $this->lots()->sum('total_rejects') : null,
         );
     }
 
