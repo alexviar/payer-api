@@ -62,9 +62,9 @@ describe('User Creation', function () {
 
     it('validates email uniqueness', function () {
         Sanctum::actingAs($this->admin);
-
+        
         User::factory()->create(['email' => 'existing@example.com']);
-
+        
         $data = $this->data;
         $data['email'] = 'existing@example.com';
 

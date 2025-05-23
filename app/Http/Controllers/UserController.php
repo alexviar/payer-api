@@ -92,6 +92,7 @@ class UserController extends Controller
         $testMessages = app()->environment('testing') ? [
             'name.required' => 'required',
             'email.required' => 'required',
+            'phone.required' =>'required',
             'role.required' => 'required',
             'password.required' => 'required'
         ] : [];
@@ -99,6 +100,7 @@ class UserController extends Controller
         $rules = [
             'name' => array_merge(['required', 'string', 'max:255'], $user ? ['sometimes'] : []),
             'email' => array_merge(['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore('id')], $user ? ['sometimes'] : []),
+            'phone' => array_merge(['required', 'string', 'max:16', $user ? ['sometimes'] : []),
             'role' => array_merge(['required', 'in:' . implode(',', [User::SUPERADMIN_ROLE, User::ADMIN_ROLE, User::GROUP_LEADER_ROLE])], $user ? ['sometimes'] : []),
             'password' => array_merge(['required', Password::default()], $user ? ['sometimes'] : [])
         ];
