@@ -98,11 +98,11 @@ class UserController extends Controller
         ] : [];
 
         $rules = [
-            'name' => array_merge(['required', 'string', 'max:255'], $user ? ['sometimes'] : []),
-            'email' => array_merge(['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore('id')], $user ? ['sometimes'] : []),
-            'phone' => array_merge(['required', 'string', 'max:16', $user ? ['sometimes'] : []),
-            'role' => array_merge(['required', 'in:' . implode(',', [User::SUPERADMIN_ROLE, User::ADMIN_ROLE, User::GROUP_LEADER_ROLE])], $user ? ['sometimes'] : []),
-            'password' => array_merge(['required', Password::default()], $user ? ['sometimes'] : [])
+            'name' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'max:255']),
+            'email' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore('id')]),
+            'phone' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'max:16']),
+            'role' => array_merge($user ? ['sometimes'] : [], ['required', 'in:' . implode(',', [User::SUPERADMIN_ROLE, User::ADMIN_ROLE, User::GROUP_LEADER_ROLE])]),
+            'password' => array_merge($user ? ['sometimes'] : [], ['required', Password::default()])
         ];
 
         return $request->validate($rules, $testMessages);
