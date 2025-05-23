@@ -99,7 +99,7 @@ class UserController extends Controller
 
         $rules = [
             'name' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'max:255']),
-            'email' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore('id')]),
+            'email' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)]),
             'phone' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'max:16']),
             'role' => array_merge($user ? ['sometimes'] : [], ['required', 'in:' . implode(',', [User::SUPERADMIN_ROLE, User::ADMIN_ROLE, User::GROUP_LEADER_ROLE])]),
             'password' => array_merge($user ? ['sometimes'] : [], ['required', Password::default()])
