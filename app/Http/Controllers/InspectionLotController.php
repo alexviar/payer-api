@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inspection;
 use App\Models\InspectionLot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InspectionLotController extends Controller
 {
@@ -26,9 +28,16 @@ class InspectionLotController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Inspection $inspection)
     {
-        //
+        return DB::transaction(function () use ($request, $inspection) {
+            $lot = $inspection->lots()->create([
+                'total_rejects' => 0,
+                'total_reworks' => 0,
+            ] + $request->all());
+            $lot->attributes()->sync($request->input('attributes', []));
+            return $lot;
+        });
     }
 
     /**
@@ -36,7 +45,8 @@ class InspectionLotController extends Controller
      */
     public function show(InspectionLot $inspectionLot)
     {
-        //
+        $inspectionLot->loadMissing(['attributes', 'inspection']);
+        return $inspectionLot;
     }
 
     /**
@@ -52,7 +62,12 @@ class InspectionLotController extends Controller
      */
     public function update(Request $request, InspectionLot $inspectionLot)
     {
-        //
+        $inspectionLot->update($request->all());
+        $inspectionLot->attributes()->sync(
+            collect($request->input('attributes', []))
+                ->mapWithKeys(fn($attribute) => [$attribute['custom_attribute_id'] => ['value' => $attribute['value']]])
+        );
+        return $inspectionLot;
     }
 
     /**
