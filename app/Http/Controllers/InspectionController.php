@@ -14,7 +14,7 @@ class InspectionController extends Controller
     {
         $query = Inspection::query();
 
-        $query->with(['plant', 'product.client', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
+        $query->with(['plant', 'product.client', 'product.attributes', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
 
         $query->latest('id');
 
@@ -27,6 +27,8 @@ class InspectionController extends Controller
 
     public function show(Inspection $inspection)
     {
+        $inspection->loadMissing(['plant', 'product.client', 'product.attributes', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
+        $inspection->append('client');
         return $inspection;
     }
 

@@ -71,6 +71,7 @@ Route::controller(ProductController::class)->prefix('products')->group(function 
 Route::controller(DefectController::class)->prefix('defects')->group(function () {
     Route::get('/', 'index')->middleware('auth:sanctum');
     Route::get('/{defect}', 'show')->middleware('auth:sanctum');
+    Route::get('/{defect}', 'show')->middleware('auth:sanctum');
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::patch('/{defect}', 'update')->middleware('auth:sanctum');
     Route::delete('/{defect}', 'destroy')->middleware('auth:sanctum');
@@ -101,17 +102,24 @@ Route::controller(InspectionController::class)->prefix('inspections')->group(fun
 
     Route::controller(InspectionLotController::class)->prefix('{inspection}/lots')->group(function () {
         Route::get('/', 'index')->middleware('auth:sanctum');
-        Route::get('/{inspectionLot}', 'show')->middleware('auth:sanctum');
         Route::post('/', 'store')->middleware('auth:sanctum');
+    });
+
+    Route::controller(InspectionLotController::class)->prefix('lots')->group(function () {
+        Route::get('/{inspectionLot}', 'show')->middleware('auth:sanctum');
         Route::patch('/{inspectionLot}', 'update')->middleware('auth:sanctum');
         Route::delete('/{inspectionLot}', 'destroy')->middleware('auth:sanctum');
 
-        Route::controller(DefectInstanceController::class)->prefix('{inspectionLot}/defects')->group(function () {
+        Route::controller(DefectInstanceController::class)->prefix('{inspectionLot}/defect-instances')->group(function () {
             Route::get('/', 'index')->middleware('auth:sanctum');
-            Route::get('/{defect}', 'show')->middleware('auth:sanctum');
             Route::post('/', 'store')->middleware('auth:sanctum');
-            Route::patch('/{defect}', 'update')->middleware('auth:sanctum');
-            Route::delete('/{defect}', 'destroy')->middleware('auth:sanctum');
+        });
+
+        Route::controller(DefectInstanceController::class)->prefix('defect-instances/{instance}')->group(function () {
+            Route::get('/', 'show')->middleware('auth:sanctum');
+            Route::get('/evidences/{evidence}', 'downloadEvidence')->name('defect-instances.evidences.download');
+            Route::patch('/', 'update')->middleware('auth:sanctum');
+            Route::delete('/', 'destroy')->middleware('auth:sanctum');
         });
 
         Route::controller(ReworkInstanceController::class)->prefix('{inspectionLot}/reworks')->group(function () {

@@ -2,11 +2,67 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class DefectInstance extends Model
 {
     /** @use HasFactory<\Database\Factories\DefectInstanceFactory> */
     use HasFactory;
+
+    protected $attributes = [
+        'tags' => '[]',
+        'evidences' => '[]'
+    ];
+
+    protected $fillable = [
+        'inspection_lot_id',
+        'defect_id',
+        'tags',
+        'evidences'
+    ];
+
+    protected $with = [
+        'defect'
+    ];
+
+    protected $appends = ['evidences_urls'];
+
+    protected $hidden = ['evidences'];
+
+    protected function casts()
+    {
+        return [
+            'evidences' => 'array',
+            'tags' => 'array',
+            'defect_id' => 'integer',
+            'inspection_lot_id' => 'integer'
+        ];
+    }
+
+    public function defect()
+    {
+        return $this->belongsTo(Defect::class);
+    }
+
+    /**
+     * Get the evidence URLs.
+     */
+    public function evidencesUrls(): Attribute
+    {
+        return Attribute::get(function () {
+            if (empty($this->evidences)) {
+                return [];
+            }
+
+            return array_map(function ($path) {
+                return route('defect-instances.evidences.download', [
+                    'instance' => $this,
+                    'evidence' => basename($path),
+                ]);
+            }, $this->evidences);
+        });
+    }
 }

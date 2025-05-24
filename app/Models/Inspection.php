@@ -38,17 +38,17 @@ class Inspection extends Model
 
     #region Attributes
 
-    public function totalRejected(): Attribute
-    {
-        return Attribute::get(
-            get: fn() => $this->lots()->sum('total_rejects'),
-        );
-    }
-
     public function totalApproved(): Attribute
     {
         return Attribute::get(
-            get: fn() => $this->lots()->sum('total_units') - $this->lots()->sum('total_rejects'),
+            get: fn() => $this->lots()->sum('total_units') - $this->total_rejected,
+        );
+    }
+
+    public function totalRejected(): Attribute
+    {
+        return Attribute::get(
+            get: fn() => (int) $this->lots()->sum('total_rejects'),
         );
     }
 
