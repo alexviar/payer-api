@@ -122,12 +122,16 @@ Route::controller(InspectionController::class)->prefix('inspections')->group(fun
             Route::delete('/', 'destroy')->middleware('auth:sanctum');
         });
 
-        Route::controller(ReworkInstanceController::class)->prefix('{inspectionLot}/reworks')->group(function () {
+        Route::controller(ReworkInstanceController::class)->prefix('{inspectionLot}/rework-instances')->group(function () {
             Route::get('/', 'index')->middleware('auth:sanctum');
-            Route::get('/{rework}', 'show')->middleware('auth:sanctum');
             Route::post('/', 'store')->middleware('auth:sanctum');
-            Route::patch('/{rework}', 'update')->middleware('auth:sanctum');
-            Route::delete('/{rework}', 'destroy')->middleware('auth:sanctum');
+        });
+
+        Route::controller(ReworkInstanceController::class)->prefix('rework-instances/{instance}')->group(function () {
+            Route::get('/', 'show')->middleware('auth:sanctum');
+            Route::get('/evidences/{evidence}', 'downloadEvidence')->name('rework-instances.evidences.download');
+            Route::patch('/', 'update')->middleware('auth:sanctum');
+            Route::delete('/', 'destroy')->middleware('auth:sanctum');
         });
     });
 });

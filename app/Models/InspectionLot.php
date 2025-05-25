@@ -32,6 +32,7 @@ class InspectionLot extends Model
     protected $with = [
         'attributes',
         'defectInstances',
+        'reworkInstances',
     ];
 
     public function inspection()
@@ -49,5 +50,10 @@ class InspectionLot extends Model
     public function defectInstances()
     {
         return $this->hasMany(DefectInstance::class);
+    }
+
+    function reworkInstances()
+    {
+        return $this->hasMany(ReworkInstance::class);
     }
 }
