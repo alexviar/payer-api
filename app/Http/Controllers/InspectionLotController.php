@@ -12,9 +12,13 @@ class InspectionLotController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, Inspection $inspection)
     {
-        //
+        $query = $inspection->lots()
+            ->with(['attributes', 'defectInstances', 'defectInstances.defect']);
+
+        $query->latest('id');
+        return $query->paginate($request->input('per_page'));
     }
 
     /**
