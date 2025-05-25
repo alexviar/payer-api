@@ -96,6 +96,7 @@ class DefectInstanceController extends Controller
     public function destroy(DefectInstance $instance)
     {
         $instance->delete();
+        $instance->lot()->decrement('total_rejects');
         return response()->noContent();
     }
 
@@ -104,8 +105,7 @@ class DefectInstanceController extends Controller
         $payload = $request->validate([
             'defect_id' => 'required|exists:defects,id',
             'evidences' => 'required|array',
-            'evidences.*' => 'required|file|image',
-            'notes' => 'nullable|string',
+            'evidences.*' => 'required|file|image'
         ]);
 
         $payload['evidences'] = array_map(function ($evidence) {
