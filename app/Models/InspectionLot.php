@@ -18,6 +18,7 @@ class InspectionLot extends Model
         'total_units',
         'total_rejects',
         'total_reworks',
+        'comment'
     ];
 
     protected $casts = [
