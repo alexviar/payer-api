@@ -18,7 +18,7 @@ class InspectionController extends Controller
 
         $query->latest('id');
 
-        $query->when($request->input('status'), function ($query, $status) {
+        $query->when($request->input('filter.status'), function ($query, $status) {
             return $query->where('status', $status);
         });
 
