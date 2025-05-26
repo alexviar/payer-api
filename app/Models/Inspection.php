@@ -34,7 +34,12 @@ class Inspection extends Model
         'sales_agent_id',
     ];
 
-    protected $appends = ['total_approved', 'total_rejected'];
+    protected $appends = [
+        'total_approved',
+        'total_rejected',
+        'pdf_report_url',
+        'excel_report_url'
+    ];
 
     #region Attributes
 
@@ -50,6 +55,39 @@ class Inspection extends Model
         return Attribute::get(
             get: fn() => (int) $this->lots()->sum('total_rejects'),
         );
+    }
+
+    public function pdfReportUrl(): Attribute
+    {
+        return Attribute::get(
+            get: fn() => route('inspections.report', [
+                'inspection' => $this,
+                'format' => 'pdf'
+            ]),
+        );
+    }
+
+    public function excelReportUrl(): Attribute
+    {
+        return Attribute::get(
+            get: fn() => route('inspections.report', [
+                'inspection' => $this,
+                'format' => 'xlsx'
+            ]),
+        );
+    }
+
+    private function statusText(): Attribute
+    {
+        $statusMap = [
+            Inspection::PENDING_STATUS => 'Pendiente',
+            Inspection::ACTIVE_STATUS => 'Activo',
+            Inspection::ON_HOLD_STATUS => 'En Espera',
+            Inspection::UNDER_REVIEW_STATUS => 'En Revisión',
+            Inspection::COMPLETED_STATUS => 'Completado',
+        ];
+
+        return Attribute::get(fn() => $statusMap[$this->status] ?? 'Desconocido');
     }
 
     public function client(): Attribute
