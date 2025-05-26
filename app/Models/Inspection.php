@@ -148,6 +148,8 @@ class Inspection extends Model
             'submit_date' => 'datetime',
             'start_date' => 'datetime',
             'complete_date' => 'datetime',
+            'status' => 'integer',
+            'inventory' => 'integer',
         ];
     }
 }

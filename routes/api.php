@@ -13,6 +13,7 @@ use App\Http\Controllers\ReworkController;
 use App\Http\Controllers\SalesAgentController;
 use App\Http\Controllers\ReworkInstanceController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -136,3 +137,5 @@ Route::controller(InspectionController::class)->prefix('inspections')->group(fun
         });
     });
 });
+
+Route::get('dashboard', [DashboardController::class, 'index']);
