@@ -18,6 +18,10 @@ class InspectionController extends Controller
 
         $query->latest('id');
 
+        $query->when($request->input('status'), function ($query, $status) {
+            return $query->where('status', $status);
+        });
+
         /** @var LengthAwarePaginator $result */
         $result = $query->paginate($request->input('page_size'));
         $result->getCollection()->each(fn($inspection) => $inspection->append('client'));
