@@ -66,16 +66,7 @@ jobs:
           zip -r ../vendor.zip .
           cd ..
 
-      - name: Generate unzip script
-        if: steps.check-composer.outputs.composer_changed == 'true'
-        id: generate-unzip-script
-        run: |
-          AUTH_TOKEN=$(openssl rand -hex 32)
-          mkdir -p public
-          sed "s/{{TOKEN}}/$AUTH_TOKEN/g" .github/scripts/unzip-vendor.template.php > public/unzip-vendor.php
-          echo "token=$AUTH_TOKEN" >> $GITHUB_OUTPUT
-
-      - name: Upload unzip script
+      - name: Upload vendor script
         if: steps.check-composer.outputs.composer_changed == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -85,7 +76,7 @@ jobs:
           protocol: ftps
           port: 21
           local-dir: ./
-          server-dir: ./vendor
+          server-dir: ./vendor/
           exclude: |
             **/*
             !vendor.zip

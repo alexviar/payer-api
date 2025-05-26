@@ -145,9 +145,9 @@ class Inspection extends Model
     public function casts(): array
     {
         return [
-            'submit_date' => 'date',
-            'start_date' => 'date',
-            'complete_date' => 'date',
+            'submit_date' => 'datetime',
+            'start_date' => 'datetime',
+            'complete_date' => 'datetime',
         ];
     }
 }
