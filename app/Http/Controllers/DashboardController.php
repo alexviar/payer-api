@@ -28,7 +28,7 @@ class DashboardController extends Controller
             ->get()
             ->mapWithKeys(function ($item) {
                 return [
-                    $this->getStatusText($item->status) => $item->total
+                    $item->status => $item->total
                 ];
             });
 
@@ -57,17 +57,5 @@ class DashboardController extends Controller
             'new_products_30_days' => $newProducts,
             'average_inspection_time_days' => round($averageInspectionTime, 1),
         ]);
-    }
-
-    private function getStatusText(int $status): string
-    {
-        return match ($status) {
-            Inspection::PENDING_STATUS => 'Pendiente',
-            Inspection::ACTIVE_STATUS => 'Activo',
-            Inspection::ON_HOLD_STATUS => 'En Espera',
-            Inspection::UNDER_REVIEW_STATUS => 'En Revisión',
-            Inspection::COMPLETED_STATUS => 'Completado',
-            default => 'Desconocido',
-        };
     }
 }
