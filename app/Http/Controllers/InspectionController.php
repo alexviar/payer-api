@@ -43,7 +43,7 @@ class InspectionController extends Controller
             return \Maatwebsite\Excel\Facades\Excel::download(
                 new \App\Exports\InspectionExport($inspection),
                 'inspeccion_' . $inspection->id . '.pdf',
-                \Maatwebsite\Excel\Excel::MPDF
+                \Maatwebsite\Excel\Excel::DOMPDF
             );
         } else {
             abort(400, 'Invalid format');
@@ -54,40 +54,9 @@ class InspectionController extends Controller
     {
         $payload = $request->all();
         $inspection = DB::transaction(function () use ($payload) {
-            $status = Arr::get($payload, 'status');
-            if ($status === Inspection::ACTIVE_STATUS) {
-                $payload['start_date'] = now();
-            }
-            if ($status === Inspection::COMPLETED_STATUS) {
-                $payload['start_date'] = now();
-                $payload['complete_date'] = now();
-            }
 
             /** @var Inspection $inspection */
             $inspection = Inspection::create(Arr::except($payload, ['sales_agent_ids', 'defect_ids', 'rework_ids']));
-            $inspection->salesAgents()->sync($payload['sales_agent_ids']);
-            $inspection->defects()->sync($payload['defect_ids']);
-            $inspection->reworks()->sync($payload['rework_ids']);
-        });
-
-
-        return response()->json($inspection, 201);
-    }
-
-    public function update(Request $request, Inspection $inspection)
-    {
-        $payload = $request->all();
-        $inspection = DB::transaction(function () use ($inspection, $payload) {
-            $status = Arr::get($payload, 'status');
-            if ($status === Inspection::ACTIVE_STATUS && $inspection->start_date === null) {
-                $payload['start_date'] = now();
-            }
-            if ($status === Inspection::COMPLETED_STATUS && $inspection->complete_date === null) {
-                $payload['complete_date'] = now();
-            }
-
-            /** @var Inspection $inspection */
-            $inspection->update(Arr::except($payload, ['sales_agent_ids', 'defect_ids', 'rework_ids']));
             $inspection->salesAgents()->sync($payload['sales_agent_ids']);
             $inspection->defects()->sync($payload['defect_ids']);
             $inspection->reworks()->sync($payload['rework_ids']);
