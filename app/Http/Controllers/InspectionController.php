@@ -22,6 +22,16 @@ class InspectionController extends Controller
             return $query->where('status', $status);
         });
 
+        $query->when($request->input('search'), function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->whereHas('product', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })->orWhereHas('product.client', function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                })->orWhere('id', $search);
+            });
+        });
+
         /** @var LengthAwarePaginator $result */
         $result = $query->paginate($request->input('page_size'));
         $result->getCollection()->each(fn($inspection) => $inspection->append('client'));
