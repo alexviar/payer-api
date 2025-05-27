@@ -40,7 +40,10 @@ class InspectionReviewController extends Controller
             $inspection->update([
                 'status' => $request->input('review_outcome') == InspectionReview::APPROVED
                     ? Inspection::COMPLETED_STATUS
-                    : Inspection::ACTIVE_STATUS
+                    : Inspection::ACTIVE_STATUS,
+                'complete_date' => $request->input('review_outcome') == InspectionReview::APPROVED
+                    ? now()
+                    : null,
             ]);
             return $inspection->reviews()->create([
                 'review_date' => now(),
