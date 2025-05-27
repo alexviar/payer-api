@@ -96,12 +96,15 @@ Route::controller(SalesAgentController::class)->prefix('sales-agents')->group(fu
 });
 
 Route::controller(InspectionController::class)->prefix('inspections')->group(function () {
+    Route::get('/collaborators', 'getCollaborators')->middleware('auth:sanctum');
+
     Route::get('/', 'index')->middleware('auth:sanctum');
     Route::get('/{inspection}', 'show')->middleware('auth:sanctum');
     Route::get('/{inspection}/report', 'downloadReport')->name('inspections.report');
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::patch('/{inspection}', 'update')->middleware('auth:sanctum');
     Route::delete('/{inspection}', 'destroy')->middleware('auth:sanctum');
+
 
     Route::controller(InspectionReviewController::class)->prefix('{inspection}/reviews')->group(function () {
         Route::get('/', 'index')->middleware('auth:sanctum');

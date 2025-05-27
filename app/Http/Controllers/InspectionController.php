@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inspection;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -21,6 +22,10 @@ class InspectionController extends Controller
         $query->when($request->input('filter.status'), function ($query, $status) {
             return $query->whereIn('status', Arr::wrap($status));
         });
+
+        if ($request->user()->role === User::GROUP_LEADER_ROLE) {
+            $query->where('group_leader_id', $request->user()->id);
+        }
 
         $query->when($request->input('search'), function ($query, $search) {
             $query->where(function ($query) use ($search) {
@@ -103,12 +108,42 @@ class InspectionController extends Controller
 
             /** @var Inspection $inspection */
             $inspection->update(Arr::except($payload, ['sales_agent_ids', 'defect_ids', 'rework_ids']));
-            $inspection->salesAgents()->sync($payload['sales_agent_ids']);
-            $inspection->defects()->sync($payload['defect_ids']);
-            $inspection->reworks()->sync($payload['rework_ids']);
+            if (isset($payload['sales_agent_ids'])) {
+                $inspection->salesAgents()->sync($payload['sales_agent_ids']);
+            }
+            if (isset($payload['defect_ids'])) {
+                $inspection->defects()->sync($payload['defect_ids']);
+            }
+            if (isset($payload['rework_ids'])) {
+                $inspection->reworks()->sync($payload['rework_ids']);
+            }
         });
 
 
         return $inspection;
+    }
+
+    /**
+     * Obtiene la lista de colaboradores únicos de las inspecciones previas de un jefe de grupo
+     *
+     * @param int $groupId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCollaborators(Request $request)
+    {
+        $user = $request->user();
+
+        $collaborators = Inspection::query()
+            // ->where('group_leader_id', $user->id)
+            ->where('complete_date', '>', now()->subMonthsWithNoOverflow(3))
+            ->whereNotNull('collaborators')
+            ->pluck('collaborators')
+            ->flatten()
+            ->unique()
+            ->filter()
+            ->values()
+            ->toArray();
+
+        return response()->json($collaborators);
     }
 }

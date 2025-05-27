@@ -33,6 +33,7 @@ class Inspection extends Model
         'product_id',
         'group_leader_id',
         'sales_agent_id',
+        'collaborators'
     ];
 
     protected $appends = [
@@ -161,6 +162,7 @@ class Inspection extends Model
             'complete_date' => 'datetime',
             'status' => 'integer',
             'inventory' => 'integer',
+            'collaborators' => 'array'
         ];
     }
 }
