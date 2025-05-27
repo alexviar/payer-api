@@ -14,8 +14,8 @@ class InspectionController extends Controller
     {
         $query = Inspection::query();
 
-        $query->with(['plant', 'product.client', 'product.attributes', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
-
+        $query->with(['lastReview', 'plant', 'product.client', 'product.attributes', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
+        $query->withCount('reviews');
         $query->latest('id');
 
         $query->when($request->input('filter.status'), function ($query, $status) {
@@ -41,7 +41,8 @@ class InspectionController extends Controller
 
     public function show(Inspection $inspection)
     {
-        $inspection->load(['plant', 'product.client', 'product.attributes', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
+        $inspection->load(['lastReview', 'plant', 'product.client', 'product.attributes', 'groupLeader', 'salesAgents', 'defects', 'reworks']);
+        $inspection->loadCount('reviews');
         $inspection->append('client');
         return $inspection;
     }
