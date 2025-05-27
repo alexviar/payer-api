@@ -43,6 +43,10 @@ class Inspection extends Model
         'excel_report_url'
     ];
 
+    protected $attributes = [
+        'collaborators' => '[]',
+    ];
+
     #region Attributes
 
     public function totalApproved(): Attribute
