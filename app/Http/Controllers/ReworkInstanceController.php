@@ -95,8 +95,13 @@ class ReworkInstanceController extends Controller
      */
     public function destroy(ReworkInstance $instance)
     {
-        $instance->delete();
-        $instance->lot()->decrement('total_reworks');
+        DB::transaction(function () use ($instance) {
+            $instance->delete();
+            $instance->lot()->decrement('total_reworks');
+            foreach ($instance->evidences as $evidence) {
+                Storage::delete($evidence);
+            }
+        });
         return response()->noContent();
     }
 

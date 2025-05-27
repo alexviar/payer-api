@@ -95,8 +95,13 @@ class DefectInstanceController extends Controller
      */
     public function destroy(DefectInstance $instance)
     {
-        $instance->delete();
-        $instance->lot()->decrement('total_rejects');
+        DB::transaction(function () use ($instance) {
+            $instance->delete();
+            $instance->lot()->decrement('total_rejects');
+            foreach ($instance->evidences as $evidence) {
+                Storage::delete($evidence);
+            }
+        });
         return response()->noContent();
     }
 
