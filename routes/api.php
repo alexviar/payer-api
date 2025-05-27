@@ -14,6 +14,7 @@ use App\Http\Controllers\SalesAgentController;
 use App\Http\Controllers\ReworkInstanceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InspectionReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -101,6 +102,11 @@ Route::controller(InspectionController::class)->prefix('inspections')->group(fun
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::patch('/{inspection}', 'update')->middleware('auth:sanctum');
     Route::delete('/{inspection}', 'destroy')->middleware('auth:sanctum');
+
+    Route::controller(InspectionReviewController::class)->prefix('{inspection}/reviews')->group(function () {
+        Route::get('/', 'index')->middleware('auth:sanctum');
+        Route::post('/', 'store')->middleware('auth:sanctum');
+    });
 
     Route::controller(InspectionLotController::class)->prefix('{inspection}/lots')->group(function () {
         Route::get('/', 'index')->middleware('auth:sanctum');

@@ -19,7 +19,7 @@ class InspectionController extends Controller
         $query->latest('id');
 
         $query->when($request->input('filter.status'), function ($query, $status) {
-            return $query->where('status', $status);
+            return $query->whereIn('status', Arr::wrap($status));
         });
 
         $query->when($request->input('search'), function ($query, $search) {
@@ -91,7 +91,7 @@ class InspectionController extends Controller
     public function update(Request $request, Inspection $inspection)
     {
         $payload = $request->all();
-        $inspection = DB::transaction(function () use ($inspection, $payload) {
+        DB::transaction(function () use ($inspection, $payload) {
             $status = Arr::get($payload, 'status');
             if ($status === Inspection::ACTIVE_STATUS && $inspection->start_date === null) {
                 $payload['start_date'] = now();
@@ -108,6 +108,6 @@ class InspectionController extends Controller
         });
 
 
-        return response()->json($inspection, 201);
+        return $inspection;
     }
 }

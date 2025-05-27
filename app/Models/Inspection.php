@@ -140,6 +140,11 @@ class Inspection extends Model
             ->withTimestamps();
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(InspectionReview::class);
+    }
+
     #endregion
 
     public function casts(): array
