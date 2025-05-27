@@ -34,7 +34,7 @@ class DefectInstanceController extends Controller
         $payload = $this->preparePayload($request);
         try {
             return DB::transaction(function () use ($payload, $inspectionLot) {
-                DB::table($inspectionLot->getTable())->update(['total_rejects' => DB::raw('total_rejects + 1')]);
+                $inspectionLot->increment('total_rejects');
                 return $inspectionLot->defectInstances()->create($payload);
             });
         } catch (\Throwable $th) {

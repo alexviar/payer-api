@@ -34,7 +34,7 @@ class ReworkInstanceController extends Controller
         $payload = $this->preparePayload($request);
         try {
             return DB::transaction(function () use ($payload, $inspectionLot) {
-                DB::table($inspectionLot->getTable())->update(['total_reworks' => DB::raw('total_reworks + 1')]);
+                $inspectionLot->increment('total_reworks');
                 return $inspectionLot->reworkInstances()->create($payload);
             });
         } catch (\Throwable $th) {
