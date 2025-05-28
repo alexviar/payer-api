@@ -102,4 +102,19 @@ class AuthController extends Controller
         }
         throw ValidationException::withMessages(['email' => __($status)]);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $payload = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $request->user()->id],
+            'phone' => ['required', 'string', 'max:255'],
+        ]);
+
+        /** @var User $user */
+        $user = $request->user();
+        $user->update($payload);
+
+        return response()->json($user);
+    }
 }

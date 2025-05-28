@@ -28,6 +28,7 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('change-password', 'changePassword')->middleware('auth:sanctum');
     Route::post('reset-password', 'resetPassword')->name('password.reset');
     Route::post('forgot-password', 'forgotPassword');
+    Route::patch('profile', 'updateProfile')->middleware('auth:sanctum');
 });
 
 Route::controller(UserController::class)->prefix('users')->group(function () {
