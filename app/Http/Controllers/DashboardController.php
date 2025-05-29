@@ -58,7 +58,7 @@ class DashboardController extends Controller
             'new_clients_30_days' => $newClients,
             'new_products_30_days' => $newProducts,
             'average_inspection_time_days' => round($averageInspectionTime, 2),
-            'perfect_inspections_percentage' => $perfectInspectionsPercentage ? round($perfectInspectionsPercentage, 2) : null,
+            'perfect_inspections_percentage' => $perfectInspectionsPercentage !== null ? round($perfectInspectionsPercentage, 2) : null,
         ]);
     }
 }
