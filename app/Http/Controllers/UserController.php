@@ -53,11 +53,11 @@ class UserController extends Controller
         // Encriptar la contraseña
         $payload['password'] = Hash::make($payload['password']);
 
-        $user = User::create($payload);
-        $user->settings()->create([
-            'language' => 'es',
-            'notifications_enabled' => true
-        ]);
+        $user = DB::transaction(function () use ($payload) {
+            $user = User::create($payload);
+
+            return $user;
+        });
 
         // Send welcome notification
         $user->notify(new WelcomeNotification($originalPassword));
