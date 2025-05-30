@@ -15,6 +15,7 @@ use App\Http\Controllers\ReworkInstanceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InspectionReviewController;
+use App\Http\Controllers\AppNotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -148,6 +149,11 @@ Route::controller(InspectionController::class)->prefix('inspections')->group(fun
             Route::delete('/', 'destroy')->middleware('auth:sanctum');
         });
     });
+});
+
+Route::controller(AppNotificationController::class)->prefix('notifications')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', 'index');
+    Route::post('/{notification}/read', 'markAsRead');
 });
 
 Route::get('dashboard', [DashboardController::class, 'index']);

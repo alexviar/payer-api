@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Inspection;
 use App\Models\User;
+use App\Notifications\InspectionAssignedNotification;
+use App\Notifications\InspectionUnderReviewNotification;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -88,8 +90,15 @@ class InspectionController extends Controller
             $inspection->salesAgents()->sync($payload['sales_agent_ids']);
             $inspection->defects()->sync($payload['defect_ids']);
             $inspection->reworks()->sync($payload['rework_ids']);
-        });
 
+            // Notify group leader when inspection is assigned
+            $groupLeader = User::find($inspection->group_leader_id);
+            if ($groupLeader) {
+                $groupLeader->notify(new InspectionAssignedNotification($inspection));
+            }
+
+            return $inspection;
+        });
 
         return response()->json($inspection, 201);
     }
@@ -98,11 +107,15 @@ class InspectionController extends Controller
     {
         $payload = $request->all();
         DB::transaction(function () use ($inspection, $payload) {
-            $status = Arr::get($payload, 'status');
-            if ($status === Inspection::ACTIVE_STATUS && $inspection->start_date === null) {
+            $oldGroupLeaderId = $inspection->group_leader_id;
+            $newGroupLeaderId = Arr::get($payload, 'group_leader_id');
+            $oldStatus = $inspection->status;
+            $newStatus = Arr::get($payload, 'status');
+
+            if ($newStatus === Inspection::ACTIVE_STATUS && $inspection->start_date === null) {
                 $payload['start_date'] = now();
             }
-            if ($status === Inspection::COMPLETED_STATUS && $inspection->complete_date === null) {
+            if ($newStatus === Inspection::COMPLETED_STATUS && $inspection->complete_date === null) {
                 $payload['complete_date'] = now();
             }
 
@@ -117,8 +130,24 @@ class InspectionController extends Controller
             if (isset($payload['rework_ids'])) {
                 $inspection->reworks()->sync($payload['rework_ids']);
             }
-        });
 
+            // Notify group leader when assigned group leader change
+            if ($oldGroupLeaderId !== $newGroupLeaderId) {
+                $newGroupLeader = User::find($newGroupLeaderId);
+                if ($newGroupLeader) {
+                    $newGroupLeader->notify(new InspectionAssignedNotification($inspection));
+                }
+            }
+
+            // Notify admins when inspection status changes to under review
+            if ($oldStatus !== Inspection::UNDER_REVIEW_STATUS && $newStatus === Inspection::UNDER_REVIEW_STATUS) {
+                // Maybe should use a queue with query chunking
+                $admins = User::whereIn('role', [User::ADMIN_ROLE, User::SUPERADMIN_ROLE])->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new InspectionUnderReviewNotification($inspection));
+                }
+            }
+        });
 
         return $inspection;
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\WelcomeNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -46,6 +47,9 @@ class UserController extends Controller
         $this->authorize('create', [User::class, $request->all()]);
         $payload = $this->preparePayload($request);
 
+        // Store original password for welcome email
+        $originalPassword = $payload['password'];
+
         // Encriptar la contraseña
         $payload['password'] = Hash::make($payload['password']);
 
@@ -54,6 +58,9 @@ class UserController extends Controller
             'language' => 'es',
             'notifications_enabled' => true
         ]);
+
+        // Send welcome notification
+        $user->notify(new WelcomeNotification($originalPassword));
 
         return $user;
     }
