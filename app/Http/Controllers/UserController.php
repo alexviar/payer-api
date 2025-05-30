@@ -50,6 +50,10 @@ class UserController extends Controller
         $payload['password'] = Hash::make($payload['password']);
 
         $user = User::create($payload);
+        $user->settings()->create([
+            'language' => 'es',
+            'notifications_enabled' => true
+        ]);
 
         return $user;
     }
@@ -92,7 +96,7 @@ class UserController extends Controller
         $testMessages = app()->environment('testing') ? [
             'name.required' => 'required',
             'email.required' => 'required',
-            'phone.required' =>'required',
+            'phone.required' => 'required',
             'role.required' => 'required',
             'password.required' => 'required'
         ] : [];

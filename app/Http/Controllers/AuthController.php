@@ -117,4 +117,18 @@ class AuthController extends Controller
 
         return response()->json($user);
     }
+
+    public function updateSettings(Request $request)
+    {
+        $payload = $request->validate([
+            'language' => ['sometimes', 'required', 'string', 'in:es,en'],
+            'notifications_enabled' => ['sometimes', 'required', 'boolean'],
+        ]);
+
+        /** @var User $user */
+        $user = $request->user();
+        $user->settings()->update($payload);
+
+        return response()->json($user->settings);
+    }
 }
