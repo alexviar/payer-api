@@ -156,6 +156,11 @@ class Inspection extends Model
         return $this->hasOne(InspectionReview::class)->latestOfMany();
     }
 
+    public function lastInspectedLot(): HasOne
+    {
+        return $this->hasOne(InspectionLot::class)->latestOfMany();
+    }
+
     #endregion
 
     public function casts(): array
