@@ -161,7 +161,7 @@ class InspectionExport implements
          */
         $row = [
             $this->rowNumber++, // <-- Row Index
-            $lot->qn,
+            $this->inspection->qn,
             Str::upper($lot->inspect_date->format('M')),
             Str::upper($lot->inspect_date->format('M/d/Y')),
             $lot->shift,
@@ -522,7 +522,7 @@ class InspectionExport implements
             __('AUTHORIZED INVENTORY') => $this->inspection->inventory,
             __('COMPANY') => $this->inspection->client->name,
             __('LOCATION') => $this->inspection->client->address,
-            __('QN APPLICABLE') => $this->qn ?? '-',
+            __('QN APPLICABLE') => $this->inspection->qn ?? '-',
         ];
 
         $rowIndex = 7;

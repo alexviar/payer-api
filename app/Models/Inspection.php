@@ -23,6 +23,7 @@ class Inspection extends Model
     const COMPLETED_STATUS = 5;
 
     protected $fillable = [
+        'qn',
         'submit_date',
         'description',
         'inventory',

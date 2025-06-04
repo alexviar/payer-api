@@ -22,6 +22,7 @@ class InspectionFactory extends Factory
     public function definition(): array
     {
         return [
+            'qn' => $this->faker->bothify('QN-####'),
             'submit_date' => $this->faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d'),
             'inventory' => $this->faker->numberBetween(1, 100),
             'description' => $this->faker->sentence(),

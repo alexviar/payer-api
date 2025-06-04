@@ -11,7 +11,6 @@ class InspectionLot extends Model
     use HasFactory;
 
     protected $fillable = [
-        'qn',
         'pn',
         'inspect_date',
         'shift',
