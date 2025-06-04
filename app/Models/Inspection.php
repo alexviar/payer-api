@@ -24,6 +24,7 @@ class Inspection extends Model
 
     protected $fillable = [
         'qn',
+        'pns',
         'submit_date',
         'description',
         'inventory',
@@ -46,6 +47,7 @@ class Inspection extends Model
 
     protected $attributes = [
         'collaborators' => '[]',
+        'pns' => '[]',
     ];
 
     #region Attributes
@@ -172,7 +174,8 @@ class Inspection extends Model
             'complete_date' => 'datetime',
             'status' => 'integer',
             'inventory' => 'integer',
-            'collaborators' => 'array'
+            'collaborators' => 'array',
+            'pns' => 'array'
         ];
     }
 }
