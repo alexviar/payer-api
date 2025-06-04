@@ -34,12 +34,34 @@ class InspectionLotController extends Controller
      */
     public function store(Request $request, Inspection $inspection)
     {
-        return DB::transaction(function () use ($request, $inspection) {
+        $payload = $request->validate([
+            'pn' => 'required|string',
+            'inspect_date' => 'required|date',
+            'shift' => 'required|integer|between:1,4',
+            'total_units' => [
+                'required',
+                'integer',
+                'min:1',
+                function ($attribute, $value, $fail) use ($inspection) {
+                    $totalInspected = $inspection->total_approved + $inspection->total_rejected;
+                    $remainingUnits = $inspection->inventory - $totalInspected;
+                    if ($value > $remainingUnits) {
+                        $fail("Solo quedan {$remainingUnits} unidades por inspeccionar");
+                    }
+                }
+            ],
+            'comment' => 'nullable|string',
+            'attributes' => 'required|array',
+            'attributes.*.custom_attribute_id' => 'required|exists:custom_attributes,id',
+            'attributes.*.value' => 'required|string',
+        ]);
+
+        return DB::transaction(function () use ($payload, $inspection) {
             $lot = $inspection->lots()->create([
                 'total_rejects' => 0,
                 'total_reworks' => 0,
-            ] + $request->all());
-            $lot->attributes()->sync($request->input('attributes', []));
+            ] + $payload);
+            $lot->attributes()->sync($payload['attributes']);
             return $lot;
         });
     }
@@ -66,12 +88,37 @@ class InspectionLotController extends Controller
      */
     public function update(Request $request, InspectionLot $inspectionLot)
     {
-        $inspectionLot->update($request->all());
-        $inspectionLot->attributes()->sync(
-            collect($request->input('attributes', []))
-                ->mapWithKeys(fn($attribute) => [$attribute['custom_attribute_id'] => ['value' => $attribute['value']]])
-        );
-        return $inspectionLot;
+        $payload = $request->validate([
+            'pn' => 'required|string',
+            'inspect_date' => 'required|date',
+            'shift' => 'required|integer|between:1,4',
+            'total_units' => [
+                'required',
+                'integer',
+                'min:1',
+                function ($attribute, $value, $fail) use ($inspectionLot) {
+                    $inspection = $inspectionLot->inspection;
+                    $totalInspected = $inspection->total_approved + $inspection->total_rejected;
+                    $remainingUnits = $inspection->inventory - $totalInspected + $inspectionLot->total_units;
+                    if ($value > $remainingUnits) {
+                        $fail("Solo quedan {$remainingUnits} unidades por inspeccionar");
+                    }
+                }
+            ],
+            'comment' => 'nullable|string',
+            'attributes' => 'required|array',
+            'attributes.*.custom_attribute_id' => 'required|exists:custom_attributes,id',
+            'attributes.*.value' => 'required|string',
+        ]);
+        return DB::transaction(function () use ($payload, $inspectionLot) {
+            $inspectionLot->update($payload);
+            $inspectionLot->attributes()->sync(
+                collect($payload['attributes'])
+                    ->mapWithKeys(fn($attribute) => [$attribute['custom_attribute_id'] => ['value' => $attribute['value']]])
+            );
+    
+            return $inspectionLot;
+        });
     }
 
     /**
