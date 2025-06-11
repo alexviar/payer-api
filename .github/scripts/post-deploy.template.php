@@ -22,12 +22,12 @@ if (strpos($userAgent, 'GitHub Actions') === false) {
 }
 
 // ==================== DESCOMPRIMIR VENDOR ====================
-if (file_exists(__DIR__ . '/../vendor.zip')) {
+if (file_exists(__DIR__ . '/../vendor/vendor.zip')) {
     $zip = new ZipArchive;
-    if ($zip->open(__DIR__ . '/../vendor.zip') === TRUE) {
+    if ($zip->open(__DIR__ . '/../vendor/vendor.zip') === TRUE) {
         $zip->extractTo(__DIR__ . '/../vendor');
         $zip->close();
-        unlink(__DIR__ . '/../vendor.zip');
+        unlink(__DIR__ . '/../vendor/vendor.zip');
         echo "Vendor descomprimido exitosamente.\n";
     } else {
         echo "Fallo al descomprimir vendor.\n";
