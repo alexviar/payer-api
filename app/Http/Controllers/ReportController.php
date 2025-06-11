@@ -166,11 +166,9 @@ class ReportController extends Controller
         $total = 0;
 
         foreach ($data['parts_data'] as $part) {
-            if (!empty($part['reworked'])) {
-                $paretoLabels[] = $part['index'];
-                $paretoData[] = (int)$part['reworked'];
-                $total += (int)$part['reworked'];
-            }
+            $paretoLabels[] = $part['index'];
+            $paretoData[] = (int)$part['reworked'];
+            $total += (int)$part['reworked'];
         }
 
         // Sort data for Pareto
