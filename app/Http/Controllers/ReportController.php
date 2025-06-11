@@ -129,7 +129,7 @@ class ReportController extends Controller
             'data' => [
                 'datasets' => [[
                     'data' => [$reworked_pieces, $total_pieces - $reworked_pieces],
-                    'backgroundColor' => ['#c45810', '#f7eee8'],
+                    'backgroundColor' => ['#408833', '#40883320'],
                     'borderWidth' => 0
                 ]],
                 'labels' => ['Retrabajadas', 'Restantes']
@@ -195,8 +195,8 @@ class ReportController extends Controller
                         'type' => 'line',
                         'label' => 'Cumulativa %',
                         'data' => $cumulativeData,
-                        'borderColor' => '#2196F3',
-                        'backgroundColor' => '#2196F3',
+                        'borderColor' => '#4bce35',
+                        'backgroundColor' => '#4bce35',
                         'yAxisID' => 'y1',
                         'fill' => false
                     ],
@@ -215,7 +215,7 @@ class ReportController extends Controller
                         'type' => 'bar',
                         'label' => 'Retrabajo',
                         'data' => $sortedData,
-                        'backgroundColor' => '#FF8C00',
+                        'backgroundColor' => '#408833',
                         'yAxisID' => 'y'
                     ]
                 ]

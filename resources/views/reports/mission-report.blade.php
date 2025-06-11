@@ -14,7 +14,7 @@
         }
 
         .header {
-            background-color: #1f4e79;
+            background-color: #030503;
             color: white;
             padding: 8px;
             margin-bottom: 10px;
@@ -55,7 +55,7 @@
         }
 
         .section-header {
-            background-color: #1f4e79;
+            background-color: #030503;
             color: white;
             font-weight: bold;
             text-align: center;
@@ -91,7 +91,7 @@
         }
 
         .charts-header {
-            background-color: #1f4e79;
+            background-color: #030503;
             color: white;
             text-align: center;
             padding: 5px;
@@ -127,21 +127,21 @@
         }
 
         .stats-table {
-            border: 1px solid #ff6600;
-            background-color: #fff5f0;
+            border: 1px solid #408833;
+            background-color: #40883320;
             border-collapse: collapse;
             margin-top: 10px;
             width: 100%;
         }
 
         .stats-table td {
-            border: 1px solid #ff6600;
+            border: 1px solid #408833;
             padding: 3px 8px;
             font-size: 9px;
         }
 
         .stats-label {
-            background-color: #ffebe0;
+            background-color: #40883320;
             font-weight: bold;
         }
 
@@ -160,7 +160,7 @@
         }
 
         .data-table th {
-            background-color: #90EE90;
+            background-color: #ebebeb;
             font-weight: bold;
             text-align: center;
         }
@@ -171,14 +171,14 @@
         }
 
         .defect-header {
-            background-color: #90EE90;
+            background-color: #030503;
             text-align: center;
             padding: 5px;
             font-weight: bold;
         }
 
         .additional-costs-header {
-            background-color: #90EE90;
+            background-color: #030503;
             text-align: center;
             padding: 5px;
             font-weight: bold;
@@ -336,13 +336,13 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <td>{{ $reportData['parts_headers']['index'] }}</td>
+                    <th>{{ $reportData['parts_headers']['index'] }}</th>
                     @foreach($reportData['parts_headers']['custom_attributes'] as $attribute)
-                    <td>{{ $attribute }}</td>
+                    <th>{{ $attribute }}</th>
                     @endforeach
-                    <td>{{ $reportData['parts_headers']['accepted'] }}</td>
-                    <td>{{ $reportData['parts_headers']['rejected'] }}</td>
-                    <td>{{ $reportData['parts_headers']['reject_percentage'] }}</td>
+                    <th>{{ $reportData['parts_headers']['accepted'] }}</th>
+                    <th>{{ $reportData['parts_headers']['rejected'] }}</th>
+                    <th>{{ $reportData['parts_headers']['reject_percentage'] }}</th>
                 </tr>
             </thead>
             <tbody>
