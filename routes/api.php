@@ -16,6 +16,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InspectionReviewController;
 use App\Http\Controllers\AppNotificationController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -103,12 +104,12 @@ Route::controller(SalesAgentController::class)->prefix('sales-agents')->group(fu
     Route::delete('/{salesAgent}', 'destroy')->middleware('auth:sanctum');
 });
 
+Route::get('/inspections/{inspection}/report', [ReportController::class, 'generateReport'])->name('inspections.report');
 Route::controller(InspectionController::class)->prefix('inspections')->group(function () {
     Route::get('/collaborators', 'getCollaborators')->middleware('auth:sanctum');
 
     Route::get('/', 'index')->middleware('auth:sanctum');
     Route::get('/{inspection}', 'show')->middleware('auth:sanctum');
-    Route::get('/{inspection}/report', 'downloadReport')->name('inspections.report');
     Route::post('/', 'store')->middleware('auth:sanctum');
     Route::patch('/{inspection}', 'update')->middleware('auth:sanctum');
     Route::delete('/{inspection}', 'destroy')->middleware('auth:sanctum');

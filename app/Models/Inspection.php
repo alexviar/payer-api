@@ -66,6 +66,13 @@ class Inspection extends Model
         );
     }
 
+    public function totalReworked(): Attribute
+    {
+        return Attribute::get(
+            get: fn() => (int) $this->lots()->sum('total_reworks'),
+        );
+    }
+
     public function pdfReportUrl(): Attribute
     {
         return Attribute::get(
@@ -86,7 +93,7 @@ class Inspection extends Model
         );
     }
 
-    private function statusText(): Attribute
+    public function statusText(): Attribute
     {
         $statusMap = [
             Inspection::PENDING_STATUS => 'Pendiente',

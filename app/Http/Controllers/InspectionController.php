@@ -54,24 +54,6 @@ class InspectionController extends Controller
         return $inspection;
     }
 
-    public function downloadReport(Request $request, Inspection $inspection)
-    {
-        if ($request->get('format') == 'xlsx') {
-            return \Maatwebsite\Excel\Facades\Excel::download(
-                new \App\Exports\InspectionExport($inspection),
-                'inspeccion_' . $inspection->id . '.xlsx'
-            );
-        } else if ($request->get('format') == 'pdf') {
-            return \Maatwebsite\Excel\Facades\Excel::download(
-                new \App\Exports\InspectionExport($inspection),
-                'inspeccion_' . $inspection->id . '.pdf',
-                \Maatwebsite\Excel\Excel::MPDF
-            );
-        } else {
-            abort(400, 'Invalid format');
-        }
-    }
-
     public function store(Request $request)
     {
         $payload = $request->all();
