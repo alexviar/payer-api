@@ -336,37 +336,40 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    @foreach($reportData['parts_headers'] as $key => $value)
-                    @if($key === 'custom_attributes')
-                    @foreach($value as $attribute)
-                    <th>{{ $attribute }}</th>
+                    <td>{{ $reportData['parts_headers']['index'] }}</td>
+                    @foreach($reportData['parts_headers']['custom_attributes'] as $attribute)
+                    <td>{{ $attribute }}</td>
                     @endforeach
-                    @else
-                    <th>{{ $value }}</th>
-                    @endif
-                    @endforeach
+                    <td>{{ $reportData['parts_headers']['accepted'] }}</td>
+                    <td>{{ $reportData['parts_headers']['rejected'] }}</td>
+                    <td>{{ $reportData['parts_headers']['reject_percentage'] }}</td>
                 </tr>
             </thead>
             <tbody>
-                @php $total_rejected = 0; @endphp
+                @php
+                $total_inspected = 0;
+                $total_rejected = 0;
+                @endphp
                 @foreach($reportData['parts_data'] as $part)
                 <tr>
-                    @foreach($part as $key => $value)
-                    @if($key === 'custom_attributes')
-                    @foreach($value as $attribute)
+                    <td>{{ $part['index'] }}</td>
+                    @foreach($part['custom_attributes'] as $attribute)
                     <td>{{ $attribute }}</td>
                     @endforeach
-                    @else
-                    <td>{{ $value }}</td>
-                    @endif
-                    @endforeach
+                    <td>{{ $part['accepted'] }}</td>
+                    <td>{{ $part['rejected'] }}</td>
+                    <td>{{ $part['reject_percentage'] }}</td>
                 </tr>
-                @php $total_rejected += (int)$part['rejected']; @endphp
+                @php
+                $total_inspected += $part['accepted'] + $part['rejected'];
+                $total_rejected += (int)$part['rejected'];
+                @endphp
                 @endforeach
                 <tr class="total-row">
-                    <td colspan="4" style="text-align: right;"><strong>Total</strong></td>
+                    <td colspan="{{ 1 + count($part['custom_attributes']) }}" style="text-align: right;"><strong>Total</strong></td>
+                    <td><strong>{{ $total_inspected - $total_rejected }}</strong></td>
                     <td><strong>{{ $total_rejected }}</strong></td>
-                    <td></td>
+                    <td>{{ $total_inspected ? number_format($total_rejected / $total_inspected, 2) : ' - ' }}%</td>
                 </tr>
             </tbody>
         </table>
