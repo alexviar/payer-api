@@ -17,6 +17,13 @@ class InspectionLotController extends Controller
         $query = $inspection->lots()
             ->with(['attributes', 'defectInstances', 'defectInstances.defect']);
 
+        $request->whenFilled('filter.date_from', function ($value) use ($query) {
+            $query->where('inspect_date', '>=', $value);
+        });
+        $request->whenFilled('filter.date_to', function ($value) use ($query) {
+            $query->where('inspect_date', '<=', $value);
+        });
+
         $query->latest('id');
         return $query->paginate($request->input('per_page'));
     }
@@ -116,7 +123,7 @@ class InspectionLotController extends Controller
                 collect($payload['attributes'])
                     ->mapWithKeys(fn($attribute) => [$attribute['custom_attribute_id'] => ['value' => $attribute['value']]])
             );
-    
+
             return $inspectionLot;
         });
     }

@@ -172,6 +172,7 @@
 
         .defect-header {
             background-color: #030503;
+            color: #FFF;
             text-align: center;
             padding: 5px;
             font-weight: bold;
@@ -179,6 +180,7 @@
 
         .additional-costs-header {
             background-color: #030503;
+            color: #FFF;
             text-align: center;
             padding: 5px;
             font-weight: bold;
@@ -297,22 +299,22 @@
 
     <!-- Charts Section -->
     <div class="charts-section">
-        <div class="charts-header">Síntesis de gráficos de 02-05-2025 a 02-05-2025</div>
+        <div class="charts-header">Síntesis de gráficos de {{$reportData['date_from']}} a {{$reportData['date_to']}}</div>
         <div class="charts-container clearfix">
             <div class="chart-section">
                 <div class="chart-title">Piezas retrabajadas</div>
                 <img src="{{ $chartUrls['donut'] }}" alt="Donut Chart" class="chart-img">
                 <table class="stats-table">
                     <tr>
-                        <td class="stats-label">Semana en curso (W19)</td>
+                        <td class="stats-label">Semana en curso (W{{$reportData['week']}})</td>
                         <td>{{ $reportData['statistics']['week_in_progress'] }}</td>
                     </tr>
                     <tr>
-                        <td class="stats-label">Mes en curso (May)</td>
+                        <td class="stats-label">Mes en curso ({{$reportData['month']}})</td>
                         <td>{{ $reportData['statistics']['month_in_progress'] }}</td>
                     </tr>
                     <tr>
-                        <td class="stats-label">Total misión (desde 02-05-2025)</td>
+                        <td class="stats-label">Total misión (desde {{$reportData['date_from']}})</td>
                         <td>{{ $reportData['statistics']['total_mission'] }}</td>
                     </tr>
                 </table>
@@ -332,7 +334,7 @@
 
     <!-- Parts Data Table -->
     <div style="margin-bottom: 10px">
-        <div class="section-header">Información de las cantidades desde 02-05-2025 a 02-05-2025</div>
+        <div class="section-header">Información de las cantidades desde {{$reportData['date_from']}} a {{$reportData['date_to']}}</div>
         <table class="data-table">
             <thead>
                 <tr>
@@ -366,7 +368,7 @@
                 @endphp
                 @endforeach
                 <tr class="total-row">
-                    <td colspan="{{ 1 + count($part['custom_attributes']) }}" style="text-align: right;"><strong>Total</strong></td>
+                    <td colspan="{{ 1 + count($reportData['parts_headers']['custom_attributes']) }}" style="text-align: right;"><strong>Total</strong></td>
                     <td><strong>{{ $total_inspected - $total_rejected }}</strong></td>
                     <td><strong>{{ $total_rejected }}</strong></td>
                     <td>{{ $total_inspected ? number_format($total_rejected / $total_inspected, 2) : ' - ' }}%</td>
@@ -379,7 +381,7 @@
         * Sin sorting para esta referencia
     </div> -->
 
-    <div class="section-header">Monte rechazado del período desde 02-05-2025 hasta 02-05-2025</div>
+    <div class="section-header">Monte rechazado del período desde {{$reportData['date_from']}} hasta {{$reportData['date_to']}}</div>
 
     <!-- Page Break for Images Section -->
     <div class="page-break"></div>

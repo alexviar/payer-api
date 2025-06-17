@@ -6,14 +6,25 @@ use App\Models\Inspection;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
     public function generateReport(Request $request, Inspection $inspection)
     {
+        $inspection->load(['lots' => function ($query) use ($request) {
+            $query->with(['attributes', 'defectInstances', 'reworkInstances']);
+            $request->whenFilled('date_from', function ($value) use ($query) {
+                $query->where('inspect_date', '>=', $value);
+            });
+            $request->whenFilled('date_to', function ($value) use ($query) {
+                $query->where('inspect_date', '<=', $value);
+            });
+        }]);
+
         if ($request->get('format') === 'pdf') {
-            return $this->generatePdfReport($inspection);
+            return $this->generatePdfReport($inspection, $request->get('date_from'), $request->get('date_to'));
         }
         if ($request->get('format') === 'xlsx') {
             return $this->generateExcelReport($inspection);
@@ -28,16 +39,21 @@ class ReportController extends Controller
         );
     }
 
-    private function generatePdfReport(Inspection $inspection)
+    private function generatePdfReport(Inspection $inspection, $dateFrom, $dateTo)
     {
         $now = now();
-        // Sample data - replace with your actual data source
+        $dateFrom = $dateFrom ? Date::parse($dateFrom) : $inspection->start_date;
+        $dateTo = $dateTo ? Date::parse($dateTo) : $inspection->complete_date;
         $reportData = [
+            'date_from' => $dateFrom?->format('d-m-Y') ?? '',
+            'date_to' => $dateTo?->format('d-m-Y') ?? '',
+            'week' => ($dateFrom ?? $dateTo ?? $now)?->weekOfYear,
+            'month' => ($dateFrom ?? $dateTo ?? $now)->format('M'),
             'mission_info' => [
                 'report_type' => 'Informe de la misión',
                 'mission' => '',
                 'reference' => '',
-                'recipient_name' => '',
+                'recipient_name' => $inspection->client->representative,
                 'distribution_list' => "{$inspection->client->name}\n{$inspection->client->email}",
                 'date' => $now->format('d-m-Y'),
                 'time' => $now->format('H:i'),
@@ -181,7 +197,7 @@ class ReportController extends Controller
             $sortedLabels[] = $paretoLabels[$key];
             $sortedData[] = $value;
             $cumulative += $value;
-            $cumulativeData[] = ($cumulative / $total) * 100;
+            $cumulativeData[] = $total ? ($cumulative / $total) * 100 : 0;
         }
 
         $paretoConfig = [
