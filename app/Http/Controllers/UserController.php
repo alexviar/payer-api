@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inspection;
 use App\Models\User;
 use App\Notifications\WelcomeNotification;
 use Illuminate\Database\Eloquent\Builder;
@@ -93,6 +94,9 @@ class UserController extends Controller
         logger('Last Superadmin', [$isLastSuperadmin, User::where('role', User::SUPERADMIN_ROLE)->get()->toArray()]);
 
         abort_if($isLastSuperadmin, 409, 'No se puede eliminar el último superadministrador del sistema.');
+
+        $hasInspections = Inspection::where('group_leader_id', $user->id)->exists();
+        abort_if($hasInspections, 409, 'Este usuario tiene inspecciones asociadas y no puede eliminarse.');
 
         $user->forceDelete();
         return response()->noContent();
