@@ -21,7 +21,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (!Auth::attempt($credentials, true)) {
+        if (!Auth::attempt($credentials, true) || !Auth::user()->is_active) {
             return response()->json(["message" => __("auth.failed")], 401);
         }
 
