@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->role === self::GROUP_LEADER_ROLE;
     }
 
+    public function isLastSuperadmin(): bool
+    {
+        return $this->isSuperadmin() && self::where('role', self::SUPERADMIN_ROLE)->where('id', '!=', $this->id)->count() == 0;
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

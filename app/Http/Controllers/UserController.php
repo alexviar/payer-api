@@ -90,7 +90,7 @@ class UserController extends Controller
     {
         $this->authorize('delete', $user);
 
-        $isLastSuperadmin = $user->role === User::SUPERADMIN_ROLE && User::where('role', User::SUPERADMIN_ROLE)->count() <= 1;
+        $isLastSuperadmin = $user->isLastSuperadmin();
         logger('Last Superadmin', [$isLastSuperadmin, User::where('role', User::SUPERADMIN_ROLE)->get()->toArray()]);
 
         abort_if($isLastSuperadmin, 409, 'No se puede eliminar el último superadministrador del sistema.');
