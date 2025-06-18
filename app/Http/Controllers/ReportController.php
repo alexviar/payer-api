@@ -101,11 +101,13 @@ class ReportController extends Controller
             }),
             'defect_images' => $inspection->lots->reduce(function ($items, $lot) {
                 foreach ($lot->defectInstances as $instance) {
+                    if ($instance->include_in_report) {
                     $items[] = [
                         'date' => $lot->inspect_date->format('d-m-Y'),
                         'defect_name' => $instance->defect->name,
                         'photos' => Arr::map($instance->evidences, fn($evidence) => $this->resizeTmp(Storage::path($evidence), 120, 160)),
                     ];
+                }
                 }
 
                 return $items;

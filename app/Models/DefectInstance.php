@@ -14,6 +14,7 @@ class DefectInstance extends Model
     use HasFactory;
 
     protected $attributes = [
+        'include_in_report' => false,
         'tags' => '[]',
         'evidences' => '[]'
     ];
@@ -22,7 +23,8 @@ class DefectInstance extends Model
         'inspection_lot_id',
         'defect_id',
         'tags',
-        'evidences'
+        'evidences',
+        'include_in_report'
     ];
 
     protected $with = [
@@ -39,7 +41,8 @@ class DefectInstance extends Model
             'evidences' => 'array',
             'tags' => 'array',
             'defect_id' => 'integer',
-            'inspection_lot_id' => 'integer'
+            'inspection_lot_id' => 'integer',
+            'include_in_report' => 'boolean'
         ];
     }
 

@@ -85,9 +85,14 @@ class DefectInstanceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DefectInstance $defectInstance)
+    public function update(Request $request, DefectInstance $instance)
     {
-        //
+        $payload = $request->validate([
+            'include_in_report' => 'sometimes|boolean'
+        ]);
+
+        $instance->update($payload);
+        return $instance;
     }
 
     /**
@@ -110,7 +115,8 @@ class DefectInstanceController extends Controller
         $payload = $request->validate([
             'defect_id' => 'required|exists:defects,id',
             'evidences' => 'required|array',
-            'evidences.*' => 'required|file|image'
+            'evidences.*' => 'required|file|image',
+            'include_in_report' => 'sometimes|boolean'
         ]);
 
         $payload['evidences'] = array_map(function ($evidence) {
