@@ -43,7 +43,7 @@ class ReportController extends Controller
     {
         $now = now();
         $dateFrom = $dateFrom ? Date::parse($dateFrom) : $inspection->start_date;
-        $dateTo = $dateTo ? Date::parse($dateTo) : $inspection->complete_date;
+        $dateTo = $dateTo ? Date::parse($dateTo) : $inspection->complete_date ?? $now;
         $reportData = [
             'date_from' => $dateFrom?->format('d-m-Y') ?? '',
             'date_to' => $dateTo?->format('d-m-Y') ?? '',
@@ -102,12 +102,12 @@ class ReportController extends Controller
             'defect_images' => $inspection->lots->reduce(function ($items, $lot) {
                 foreach ($lot->defectInstances as $instance) {
                     if ($instance->include_in_report) {
-                    $items[] = [
-                        'date' => $lot->inspect_date->format('d-m-Y'),
-                        'defect_name' => $instance->defect->name,
-                        'photos' => Arr::map($instance->evidences, fn($evidence) => $this->resizeTmp(Storage::path($evidence), 120, 160)),
-                    ];
-                }
+                        $items[] = [
+                            'date' => $lot->inspect_date->format('d-m-Y'),
+                            'defect_name' => $instance->defect->name,
+                            'photos' => Arr::map($instance->evidences, fn($evidence) => $this->resizeTmp(Storage::path($evidence), 120, 160)),
+                        ];
+                    }
                 }
 
                 return $items;
