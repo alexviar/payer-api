@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,7 +31,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
-        'role'
+        'role',
+        'is_active'
     ];
 
     public function isSuperadmin(): bool
@@ -49,7 +52,15 @@ class User extends Authenticatable
 
     public function isLastSuperadmin(): bool
     {
-        return $this->isSuperadmin() && self::where('role', self::SUPERADMIN_ROLE)->where('id', '!=', $this->id)->count() == 0;
+        return $this->isSuperadmin() && self::where('role', self::SUPERADMIN_ROLE)
+            ->isActive()
+            ->where('id', '!=', $this->id)
+            ->count() == 0;
+    }
+
+    public function scopeIsActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
     }
 
     /**
@@ -72,7 +83,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'role' => 'integer'
+            'role' => 'integer',
+            'is_active' => 'boolean'
         ];
     }
 

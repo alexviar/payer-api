@@ -81,6 +81,16 @@ class UserController extends Controller
             $payload['password'] = Hash::make($payload['password']);
         }
 
+        if ($user->isLastSuperadmin()) {
+            if (isset($payload['is_active']) && $payload['is_active'] == false) {
+                abort(409, 'Este es el único superadministrador activo del sistema. No se puede deshabilitar.');
+            }
+
+            if (isset($payload['role']) && $payload['role'] != User::SUPERADMIN_ROLE) {
+                abort(409, 'Este es el único superadministrador del sistema. No se puede cambiar el rol.');
+            }
+        }
+
         $user->update($payload);
 
         return $user;
@@ -117,7 +127,8 @@ class UserController extends Controller
             'email' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)]),
             'phone' => array_merge($user ? ['sometimes'] : [], ['required', 'string', 'max:16']),
             'role' => array_merge($user ? ['sometimes'] : [], ['required', 'in:' . implode(',', [User::SUPERADMIN_ROLE, User::ADMIN_ROLE, User::GROUP_LEADER_ROLE])]),
-            'password' => array_merge($user ? ['sometimes'] : [], ['required', Password::default()])
+            'password' => array_merge($user ? ['sometimes'] : [], ['required', Password::default()]),
+            'is_active' => array_merge($user ? ['sometimes'] : [], ['required', 'boolean'])
         ];
 
         return $request->validate($rules, $testMessages);
