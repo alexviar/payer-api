@@ -400,7 +400,7 @@
             <tbody>
                 @php $total_samples = 0; $photos_count = 0; @endphp
                 @foreach($reportData['defect_images'] as $image)
-                @php $photos_count += count($image['photos']); @endphp
+                @php $photos_count = count($image['photos']); @endphp
                 <tr>
                     <td style="border: 1px solid #000; padding: 5px;">{{ $image['date'] }}</td>
                     <td style="border: 1px solid #000; padding: 5px;">{{ $image['defect_name'] }}</td>
