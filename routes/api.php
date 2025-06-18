@@ -105,6 +105,7 @@ Route::controller(SalesAgentController::class)->prefix('sales-agents')->group(fu
 });
 
 Route::get('/inspections/{inspection}/report', [ReportController::class, 'generateReport'])->name('inspections.report');
+Route::get('/reports/{report}', [ReportController::class, 'downloadReport'])->name('reports.download');
 Route::controller(InspectionController::class)->prefix('inspections')->group(function () {
     Route::get('/collaborators', 'getCollaborators')->middleware('auth:sanctum');
 

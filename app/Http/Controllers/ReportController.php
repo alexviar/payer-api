@@ -31,12 +31,52 @@ class ReportController extends Controller
         }
         return response()->json(['message' => 'Formato de reporte no válido'], 400);
     }
+
+    public function downloadReport(Request $request, string $report)
+    {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('local');
+        $report = 'reports/' . $report;
+        if (!$disk->exists($report)) {
+            abort(404, 'Reporte no encontrado');
+        }
+
+        // $fileTime = $disk->lastModified($report);
+        // if (now()->diffInMinutes($fileTime) > 60) {
+        //     $disk->delete($report);
+        //     abort(410, 'El enlace de descarga ha expirado');
+        // }
+
+        return $disk->download($report, headers: [
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Content-Security-Policy' => "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+        ]);
+    }
+
     private function generateExcelReport(Inspection $inspection)
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(
+        $now = now();
+        $filename = 'inspeccion_' . $inspection->id . '_' . $now->format('Y-m-d_H-i-s') . '.xlsx';
+        $path = 'reports/' . $filename;
+
+        \Maatwebsite\Excel\Facades\Excel::store(
             new \App\Exports\InspectionExport($inspection),
-            'inspeccion_' . $inspection->id . '.xlsx'
+            $path,
+            'local'
         );
+
+        // Generate temporary download URL
+        $expiresAt = $now->addHour();
+        $downloadUrl = route('reports.download', [
+            'report' => basename($path)
+        ]);
+
+        return response()->json([
+            'message' => 'Reporte generado exitosamente',
+            'download_url' => $downloadUrl,
+            'filename' => $filename,
+            'expires_at' => $expiresAt->toISOString()
+        ]);
     }
 
     private function generatePdfReport(Inspection $inspection, $dateFrom, $dateTo)
@@ -122,15 +162,30 @@ class ReportController extends Controller
         // Generate chart URLs
         $chartUrls = $this->generateChartUrls($reportData);
 
-        if (request('format') === 'pdf') {
-            set_time_limit(3000);
-            $pdf = Pdf::loadView('reports.mission-report', compact('reportData', 'chartUrls'));
-            $pdf->setPaper('A4', 'portrait');
+        // Generate PDF
+        set_time_limit(3000);
+        $pdf = Pdf::loadView('reports.mission-report', compact('reportData', 'chartUrls'));
+        $pdf->setPaper('A4', 'portrait');
 
-            return $pdf->stream('mission-report.pdf');
-        }
+        $now = now();
+        // Save PDF to storage
+        $filename = 'mission-report_' . $inspection->id . '_' . $now->format('Y-m-d_H-i-s') . '.pdf';
+        $path = 'reports/' . $filename;
 
-        return view('reports.mission-report', compact('reportData', 'chartUrls'));
+        Storage::disk('local')->put($path, $pdf->output());
+
+        // Generate temporary download URL
+        $expiresAt = $now->addHour();
+        $downloadUrl = route('reports.download', [
+            'report' => basename($path)
+        ]);
+
+        return response()->json([
+            'message' => 'Reporte generado exitosamente',
+            'download_url' => $downloadUrl,
+            'filename' => $filename,
+            'expires_at' => $expiresAt->toISOString()
+        ]);
     }
 
     private function generateChartUrls($data)
