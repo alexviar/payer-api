@@ -37,6 +37,7 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     })->middleware('auth:sanctum');
     Route::patch('profile', 'updateProfile')->middleware('auth:sanctum');
     Route::patch('settings', 'updateSettings')->middleware('auth:sanctum');
+    Route::delete('delete-account', 'deleteAccount')->middleware('auth:sanctum');
 });
 
 Route::controller(UserController::class)->prefix('users')->group(function () {

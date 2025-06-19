@@ -131,4 +131,16 @@ class AuthController extends Controller
 
         return response()->json($user->settings);
     }
+
+    public function deleteAccount(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $user->email = Str::random(10) . '@deleted';
+        $user->is_active = false;
+        $user->clearPassword();
+        $user->save();
+        $user->tokens()->delete();
+        return response()->noContent();
+    }
 }

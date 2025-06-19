@@ -93,6 +93,11 @@ class User extends Authenticatable
         return $this->hasOne(UserSetting::class);
     }
 
+    public function clearPassword()
+    {
+        $this->attributes['password'] = '';
+    }
+
     protected static function booted()
     {
         static::created(function (User $user) {
