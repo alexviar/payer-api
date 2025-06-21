@@ -34,6 +34,30 @@ class AuthController extends Controller
         ]);
     }
 
+    public function register(Request $request)
+    {
+        $payload = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['required', 'string', 'max:16'],
+            'password' => ['required', 'confirmed', RulesPassword::default()],
+        ]);
+
+        $user = User::create([
+            'name' => $payload['name'],
+            'email' => $payload['email'],
+            'phone' => $payload['phone'],
+            'password' => $payload['password'],
+            'role' => User::GROUP_LEADER_ROLE,
+            'is_active' => true,
+        ]);
+
+        return response()->json([
+            'user' => $user,
+            'access_token' => $user->createToken('*')->plainTextToken
+        ], 201);
+    }
+
     public function logout(Request $request)
     {
         /** @var User $user */
